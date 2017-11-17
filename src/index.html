@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head id="head">
+    <meta charset="utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title ng-bind="title">蓝石资管</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap/css/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/ui_grid/ui-grid.min.css" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
+</head>
+<body>
+    <div id="allWrap">
+        <div class="header">
+            <div class="header_logo">
+                <img id="header_logo" src="img/logo.png" alt="logo">
+            </div>
+            <div class="header_nav">
+                <div class="header_sub_nav">
+                    <ul class="clearfix header_list" id="headerList">
+                        <li ng-repeat="item in titleList" class="{{title==item.title?'header_list_active':''}}" ng-show="item.visible" ><a href="{{item.url}}" ng-bind="item.title" ></a></li>
+                    </ul>
+                </div>
+                <div class="header_person">
+                    <div class="header_welcome">
+                        <img class="setting_icon" src="img/user-icon.png" alt="用户">
+                        <span>欢迎您，<span ng-bind="username"></span></span>
+                    </div>
+                    <div class="header_exit_login">
+                        <img class="setting_icon" src="img/exit.png" alt="退出登录" ng-click="logOut()" >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content_aside" ng-show="itemTitle.length">
+                <ul class="aside_list">
+                    <li ng-repeat="item in itemTitle">
+                        <a class="{{item.list.length?item.isShow?'isShowMore_active':'isShowMore':item.pageName==pageNow?'aside_list_active':''}}" href="{{item.url}}" ng-click="activeListStyle($event, item, item.action)">
+                            <span ng-bind="item.name"></span>
+                            <img src="img/option_white.png" alt="" ng-show="item.list.length && !item.isShow">
+                            <img src="img/option_white_show.png" alt="" ng-show="item.list.length && item.isShow">
+                        </a>
+                        <ul class="aside_child" ng-show="item.isShow">
+                            <li ng-repeat="list in item.list">
+                                <a href="{{list.url}}" ng-bind="list.name" ng-click="activeListStyle($event, undefined, list.action)" class="{{list.pageName==pageNow?'aside_list_active':''}}"></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="content_main">
+                <ui-view></ui-view>
+            </div>
+        </div>
+        <div class="err_wrap" ng-show="isError">
+            <div class="err_inner" drag>
+                <div class="errTitle" drag-handle><h3>提示</h3><img ng-click="close()" src="img/err.png"/></div>
+                <div class="errCont">
+                    <pre class="err-detail" ng-bind-html="errText"></pre>
+                </div>
+                <div class="errHandle" ng-show="needHandle">
+                    <span class="errHandle_confirm" ng-click="resultConfirm()">确认</span>
+                    <span class="errHandle_cancel" ng-click="close()">取消</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal显示-->
+    <modal-chart></modal-chart>
+    <!--loading图-->
+    <div id="spinner">
+        <div id="spinner-inner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/libs/require.js" data-main="js/main"></script>
+</body>
+</html>

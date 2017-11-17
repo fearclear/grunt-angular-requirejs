@@ -1,0 +1,19 @@
+<!--modal显示-->
+<div class="modal show_modal" ng-show="isShowModal">
+    <div class="modal-content">
+        <div class="modal-header clearfix">
+            <div class="pull-left">
+                走势图
+            </div>
+            <div class="pull-right">
+                <span class="iconfont icon-close pointer" ng-click="closeModal()"></span>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div id="mainChart" style="height: 400px"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="closeModal()">关闭</button>
+        </div>
+    </div>
+</div>

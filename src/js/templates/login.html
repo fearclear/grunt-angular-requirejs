@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="css/templates/login.css">
+<div class="logo_wrap">
+    <div class="lg_wrap clearfix">
+        <div class="lg_inner clearfix">
+            <div class="lg_banner"></div>
+            <form class="lg_login" ng-submit="login()">
+                <div class="lg_title">登录</div>
+                <div class="lg_username">
+                    <div class="input-group">
+                        <input type="text" class="input-item form-control" name="name" placeholder="登录账号" ng-model="user.name" data-validate="required:请填写账号" />
+                        <span class="right-icon iconfont icon-user"></span>
+                    </div>
+                </div>
+                <div class="lg_password">
+                    <div class="input-group">
+                        <input type="password" class="input-item form-control" name="password" placeholder="登录密码" ng-model="user.password" data-validate="required:请填写密码" />
+                        <span class="right-icon iconfont icon-password"></span>
+                    </div>
+                </div>
+                <input type="submit" class="lg_submit" value="登录"/>
+            </form>
+        </div>
+    </div>
+</div>
