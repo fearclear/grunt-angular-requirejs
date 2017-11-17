@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search-float clearfix">
+        <div class="pull-left common-flex">
+            <div class="common-search-part">
+                <span class="common-label">开始时间</span>
+                <input class="common-input form-control" ng-model="sr.startDate" type="text" id="srPIStartDate" def-laydate />
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">结束时间</span>
+                <input class="common-input form-control" ng-model="sr.endDate" type="text" id="srPIEndDate" def-laydate />
+            </div>
+        </div>
+        <div class="pull-right common-flex">
+            <div class="common-search-part">
+                <span class="btn common-btn" ng-click="searchStats()"><i class="glyphicon glyphicon-search"></i>查询</span>
+                <span class="btn common-btn" ng-click="compareStats()">比对</span>
+            </div>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content">
+        <div ui-grid="gridOptions" class="grid" ui-grid-selection ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>

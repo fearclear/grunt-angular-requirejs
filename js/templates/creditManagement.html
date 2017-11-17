@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="cm_company" ng-show="isCompany" id="cmCompany">
+    <div class="cm_aside">
+        <div class="cm_aside_title">
+            资料目录
+        </div>
+        <div class="cm_aside_nav">
+            <ul class="cm_nav_list">
+                <li ng-repeat="item in itemNavies">
+                    <span ng-hide="item.isShow" ng-click="toggleShowMore(item)">▶</span>
+                    <span ng-show="item.isShow" ng-click="toggleShowMore(item)">▼</span>
+                    <span class="pointer cm_nav_list_title" ng-bind="item.name" ng-click="toggleShowMore(item)"></span>
+                    <ul class="cm_nav_child" ng-show="item.isShow">
+                        <li ng-repeat="list in item.list">
+                            <a class="{{allData.key == list.key?'pointer cm_nav_list_item main_color':'pointer cm_nav_list_item'}}" ng-bind="list.name" ng-click="changeKey(list.key)"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="cm_content">
+        <div cm-profile class="cm_content_wrap" ng-show="allData.key=='profile'"></div>
+        <div cm-history-rating class="cm_content_wrap" ng-show="allData.key=='historyRating'"></div>
+        <div cm-qualification class="cm_content_wrap" ng-show="allData.key=='qualification'"></div>
+        <div cm-credit-line class="cm_content_wrap" ng-show="allData.key=='creditLine'"></div>
+        <div cm-funds-to-change class="cm_content_wrap" ng-show="allData.key=='fundsToChange'"></div>
+        <div cm-funds-to-invest class="cm_content_wrap" ng-show="allData.key=='fundsToInvest'"></div>
+        <div cm-profit-statement class="cm_content_wrap" ng-show="allData.key=='profitStatement'"></div>
+        <div cm-cash-flow-statement class="cm_content_wrap" ng-show="allData.key=='cashFlowStatement'"></div>
+        <div cm-cash-flow-supplement class="cm_content_wrap" ng-show="allData.key=='cashFlowSupplement'"></div>
+        <div cm-balance-sheet class="cm_content_wrap" ng-show="allData.key=='balanceSheet'"></div>
+    </div>
+</div>
+<div class="cm_product" ng-hide="isCompany">
+    <div class="cm_aside">
+        <div class="cm_aside_title">
+            资料目录
+        </div>
+        <div class="cm_aside_nav">
+            <ul class="cm_nav_list">
+                <li ng-repeat="list in productList">
+                    <a class="{{allData.key == list.key?'pointer cm_nav_list_item main_color':'pointer cm_nav_list_item'}}" ng-bind="list.name" ng-click="changeKey(list.key)"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="cm_content">
+        <div cm-product-profile class="cm_content_wrap" ng-show="allData.key=='productProfile'"></div>
+        <div cm-product-history-rating class="cm_content_wrap" ng-show="allData.key=='productHistoryRating'"></div>
+    </div>
+</div>
+

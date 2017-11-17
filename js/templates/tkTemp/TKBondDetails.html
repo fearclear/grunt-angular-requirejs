@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="css/templates/TKFundFunds.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<div class="tKTicket_main">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">债券代码</span>
+            <input type="text" class="common-input form-control" ng-model="tkSearch.keyword" >
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易市场</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tkSearch.market">
+                <ui-select-match placeholder="请选择交易市场" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="market.code as market in marketNames track by $index">
+                    <span ng-bind="market.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配市场
+                </ui-select-no-choice>
+            </ui-select><!--
+            <select class="tm_select" ng-options="market.code as market.name for market in marketNames" ng-model="tkSearch.market" >
+                <option value="">&#45;&#45;请选择交易市场&#45;&#45;</option>
+            </select>-->
+        </div>
+        <div class="common-search-part">
+            <span class="pointer common-btn btn" ng-click="filData()">查询</span>
+            <span class="pointer common-btn btn" ng-csv="getArray" filename="全部产品明细.csv">导出全部</span>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">总数({{levelCount}})</span>
+            <span class="common-label ml-10">单位(万元)</span>
+        </div>
+    </div>
+    <div class="tkTicket_main_wrap">
+        <div ui-grid="gridOptions" class="grid" ui-grid-tree-view ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>

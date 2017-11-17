@@ -1,0 +1,48 @@
+<div class="cm_content_part">
+    <h2 class="cm_h_title">公司授信额度表</h2>
+    <table class="table" style="width: 100%">
+        <colgroup>
+            <col style="width: 8%;"/>
+            <col style="width: 4%;"/>
+            <col style="width: 4%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 28%;"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>公司名称</th>
+            <th>币种</th>
+            <th>授信对象</th>
+            <th>签署授信协议银行家数</th>
+            <th>授信额度合计(亿元)</th>
+            <th>已使用额度(亿元)</th>
+            <th>未使用额度(亿元)</th>
+            <th>公告日期</th>
+            <th>更新日期</th>
+            <th>截止日期</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in allData.creditLine">
+            <td>{{item.COMPANYNAME}}</td>
+            <td>{{item.CURRENCY}}</td>
+            <td>{{item.CREDITOBJECT}}</td>
+            <td>{{item.BANKCOUNT}}</td>
+            <td>{{item.CREDITSUM}}</td>
+            <td>{{item.CREDITUSED}}</td>
+            <td>{{item.CREDITUNUSED}}</td>
+            <td>{{item.NOTICEDATE}}</td>
+            <td>{{item.UPDATEDATE}}</td>
+            <td>{{item.ENDDATE}}</td>
+            <td class="aline_left">{{item.REMARK}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

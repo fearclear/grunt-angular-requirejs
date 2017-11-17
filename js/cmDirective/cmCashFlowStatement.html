@@ -1,0 +1,415 @@
+<div class="cm_content_title">
+    通用类现金流量表
+    <!--<span class="cmSearch_export main_color pointer">[export]</span>-->
+</div>
+<div class="cm_content_header">
+    <span>类型：普通报表</span>
+    <span>年数：</span>
+    <label class="cm_report_type_label">
+        <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="3">
+        <b class="hideCheck">3Y</b>
+    </label><label class="cm_report_type_label">
+        <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="5">
+        <b class="hideCheck">5Y</b>
+    </label><label class="cm_report_type_label">
+        <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="10">
+        <b class="hideCheck">10Y</b>
+    </label>
+    <span>单位：</span><select ng-model="filUnit" ng-options="filUnit.code as filUnit.name for filUnit in filUnits"></select>
+    <span>币种：人民币</span>
+    <span class="cm_report_type">
+        <span>交易类型</span>
+        <label class="cm_report_type_label">
+            <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.fullYear" ng-true-value="'001'">
+            <b class="hideCheck">年度报告</b>
+        </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.halfYear" ng-true-value="'002'">
+        <b class="hideCheck">半年度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.firstQuarter" ng-true-value="'003'">
+        <b class="hideCheck">一季度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.thirdQuarter" ng-true-value="'004'">
+        <b class="hideCheck">三季度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.otherReport" ng-true-value="'005'">
+        <b class="hideCheck">其他报告</b>
+    </label>
+    </span>
+    <span class="cmSearch_handle clearfix">
+        <span class="pointer" ng-click="searchFin('getFinCashFlow')">查询</span>
+        <span class="pointer" ng-click="resetFin()">重置</span>
+    </span>
+</div>
+<div class="cm_content_detail">
+    <div class="cm_content_part">
+        <table class="cm_financial_table">
+            <tbody>
+            <tr>
+                <th ng-show="allData.cashFlowStatement.length"></th>
+                <th ng-show="allData.cashFlowStatement.length" ng-repeat="item in allData.cashFlowStatement"><span>{{item.TITLE}}</span></th>
+            </tr>
+            <tr>
+                <td><span>上市前/上市后</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.ISLISTINGREPORT==0?'上市前/挂牌前':item.ISLISTINGREPORT==1?'A/B股上市后':item.ISLISTINGREPORT==2?'三板挂牌后':''}}</td>
+            </tr>
+            <tr>
+                <td><span>公司类型</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.companyType}}</td>
+            </tr>
+            <tr>
+                <td><span>报表类型</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DATAAJUSTTYPE==0?'衍生值':item.DATAAJUSTTYPE==1?'调整前':item.DATAAJUSTTYPE==2?'调整后':item.DATAAJUSTTYPE==3?'原始值':''}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>一、经营活动产生的现金流量：</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement"></td>
+            </tr>
+            <tr>
+                <td class="indent"><span>销售商品、提供劳务收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.SALEGOODSSERVICEREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>客户存款和同业存放款项净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIDEPOSIT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>向中央银行借款净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIBORROWFROMCBANK/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>向其他金融机构拆入资金净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIBORROWFROMFI/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到原保险合同保费取得的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.PREMIUMREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到再保险业务现金净额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NETRIREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>保户储金及投资款净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIINSUREDDEPOSITINV/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>处置交易性金融资产净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIDISPTRADEFASSET/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收取利息、手续费及佣金的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INTANDCOMMREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>拆入资金净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIBORROWFUND/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>发放贷款及垫款的净减少额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NDLOANADVANCES/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>回购业务资金净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIBUYBACKFUND/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到的税费返还(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.TAXRETURNREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到其他与经营活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHEROPERATEREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动现金流入的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWINOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动现金流入的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWINBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>经营活动现金流入小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMOPERATEFLOWIN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>购买商品、接收劳务支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.BUYGOODSSERVICEPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>客户贷款及垫款净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NILOANADVANCES/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>存放中央银行和同业款项净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIDEPOSITINCBANKFI/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付原保险合同赔付款项的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INDEMNITYPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付利息、手续费及佣金的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INTANDCOMMPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付保单红利的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DIVIPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付给职工以及为职工支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.EMPLOYEEPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付的各项税费(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.TAXPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付其他的与经营活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHEROPERATEPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动现金流出的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWOUTOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动现金流出的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWOUTBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>经营活动现金流出小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMOPERATEFLOWOUT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动产生的现金流量净额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动产生的现金流量净额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OPERATEFLOWBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>经营活动产生的现金流量净额(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.NETOPERATECASHFLOW/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>二、投资活动产生的现金流量</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement"></td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收回投资收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DISPOSALINVREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>取得投资收益收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVINCOMEREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>处置固定资产、无形资产和其他长期资产收回的现金净额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DISPFILASSETREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>处置子公司及其他营业单位收到的现金净额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DISPSUBSIDIARYREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>减少质押和定期存款所收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.REDUCEPLEDGETDEPOSIT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到其他与投资活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHERINVREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动现金流入的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWINOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动现金流入的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWINBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>投资活动现金流入小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMINVFLOWIN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>购建固定资产、无形资产和其他长期资产支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.BUYFILASSETPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>质押贷款净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NIPLEDGELOAN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>取得子公司及其他营业单位支付的现金净额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.GETSUBSIDIARYPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>增加质押和定期存款所支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.ADDPLEDGETDEPOSIT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付其他与投资活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHERINVPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动现金流出的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWOUTOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动现金流出的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWOUTBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>投资活动现金流出小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMINVFLOWOUT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动产生的现金流量净额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资活动产生的现金流量净额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.INVFLOWBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>投资活动产生的现金流量净额(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.NETINVCASHFLOW/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>三、筹资活动产生的现金流量</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement"></td>
+            </tr>
+            <tr>
+                <td class="indent"><span>吸收投资收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.ACCEPTINVREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>其中：子公司吸收少数股东投资收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.SUBSIDIARYACCEPT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>取得借款收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.LOANREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>发行债券收到的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.ISSUEBONDREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>收到其他与筹资活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHERFINAREC/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动现金流入的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWINOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动现金流入的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWINBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>筹资活动现金流入小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMFINAFLOWIN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>偿还债务支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.REPAYDEBTPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>分配股利、利润或偿付利息支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.DIVIPROFITORINTPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>子公司支付给少数股东的股利利润(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.SUBSIDIARYPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>购买子公司少数股权而支付的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.BUYSUBSIDIARYPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>支付其他与筹资活动有关的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.OTHERFINAPAY/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>子公司减资支付给少数股东的现金(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.SUBSIDIARYREDUCTCAPITAL/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动现金流出的其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWOUTOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动现金流出的平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWOUTBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>筹资活动现金流出小计(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.SUMFINAFLOWOUT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动产生的现金流量净额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>筹资活动产生的现金流量净额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.FINAFLOWBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent bold"><span>筹资活动产生的现金流量净额(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.NETFINACASHFLOW/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>四、汇率变动对现金及现金等价物的影响(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.EFFECTEXCHANGERATE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金及现金等价物净增加额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NICASHEQUIOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金及现金等价物净增加额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.NICASHEQUIBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>五、现金及现金等价物净增加额(元)</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowStatement">{{item.NICASHEQUI/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>加：期初现金及现金等价物余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.CASHEQUIBEGINNING/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>期末现金及现金等价物余额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.CASHEQUIENDINGOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>期末现金及现金等价物余额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.CASHEQUIENDINGBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>期末现金及现金等价物余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.CASHEQUIENDING/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td><span>公告日期</span></td>
+                <td ng-repeat="item in allData.cashFlowStatement">{{item.LATESTNOTICEDATE| date: 'yyyy-MM-dd'}}</td>
+            </tr>
+            <tr>
+                <td><span>数据来源</span></td>
+                <td ng-repeat="item in allData.profitStatement">{{item.REPORTSOURCETYPE}}</td>
+            </tr>
+            </tbody>
+        </table >
+    </div>
+</div>

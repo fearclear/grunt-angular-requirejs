@@ -1,0 +1,267 @@
+<link rel="stylesheet" href="css/templates/positionManagement.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<div class="pm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">估值时间：</span>
+            <input class="common-input form-control" ng-model="pmDate" type="text" id="pmDate" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="getHolding(pmDate)"><i class="glyphicon glyphicon-search"></i>查询</span>
+        </div>
+    </div>
+    <div class="pm_body">
+        <div class="pm_part_holding_report clearfix" ng-show="pmData.holdingGroupLeft.length">
+            <div class="pm_phr_left">
+                <div class="pm_table_head">
+                    <table>
+                        <colgroup>
+                            <col width="30%" />
+                            <col width="40%" />
+                            <col width="40%" />
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th></th>
+                            <th>数量</th>
+                            <th>金额(万)</th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pm_table_body">
+                    <table>
+                        <colgroup>
+                            <col width="30%" />
+                            <col width="40%" />
+                            <col width="40%" />
+                        </colgroup>
+                        <tbody>
+                        <tr ng-repeat="item in pmData.holdingGroupLeft">
+                            <td class="align_center" ng-bind="item.type"></td>
+                            <td class="number_type" ng-bind="item.number | number:0"></td>
+                            <td class="number_type" ng-bind="item.amount/10000 | number:2"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="pm_phr_right">
+                <div class="pm_table_head">
+                    <table>
+                        <colgroup>
+                            <col width="30%" />
+                            <col width="40%" />
+                            <col width="40%" />
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th></th>
+                            <th>数量</th>
+                            <th>金额(万)</th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pm_table_body">
+                    <table>
+                        <colgroup>
+                            <col width="30%" />
+                            <col width="40%" />
+                            <col width="40%" />
+                        </colgroup>
+                        <tbody>
+                        <tr ng-repeat="item in pmData.holdingGroupRight">
+                            <td class="align_center" ng-bind="item.type"></td>
+                            <td class="number_type" ng-bind="item.number | number:0"></td>
+                            <td class="number_type" ng-bind="item.amount/10000 | number:2"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="pm_part_holding_chart">
+            <div class="pm_chart_header align_center">
+                持仓券种分布
+            </div>
+            <div class="pm_chart_body">
+                <nvd3 options="holdingOption" data="holdingData"></nvd3>
+            </div>
+        </div>
+        <div class="pm_part_pie clearfix">
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额区域分布饼图-省
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieProvinceDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额一级行业分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieIndustryDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额评级分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieRatingDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额企业性质分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieCompanyDataAmount"></nvd3>
+                </div>
+            </div>
+        </div>
+        <div class="pm_part_pie clearfix">
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量区域分布饼图-省
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieProvinceDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量一级行业分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieIndustryDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量评级分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieRatingDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量企业性质分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieCompanyDataNumber"></nvd3>
+                </div>
+            </div>
+        </div>
+        <div class="pm_part_top10" ng-show="pmData.holdingCompanyTop10Result.length">
+            <div class="pm_chart_header align_center">
+                十大重仓企业
+            </div>
+            <div class="pm_top10_body">
+                <div class="pm_table_body">
+                    <table>
+                        <tr>
+                            <td class="align_center">序号</td>
+                            <td class="align_center">企业名称</td>
+                            <td class="align_center">数量</td>
+                            <td class="align_center">金额</td>
+                            <td class="align_center">操作</td>
+                        </tr>
+                        <tr ng-repeat="item in pmData.holdingCompanyTop10Result">
+                            <td class="align_center" ng-bind="$index+1"></td>
+                            <td class="align_center main_color pointer" ng-bind="item.companyName" ng-click="goMainDetail(item)"></td>
+                            <td class="number_type" ng-bind="item.number | number:0"></td>
+                            <td class="number_type" ng-bind="item.amount | number:effectiveNumber"></td>
+                            <td class="align_center pointer main_color" ng-click="showMoreList(item, 'top10')">查看</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="pm_part_dueDate" ng-show="pmData.holdingDueDateGroupResult.length">
+            <div class="pm_chart_header align_center">
+                持仓到期明细
+            </div>
+            <div class="pm_top10_body">
+                <div class="pm_table_body">
+                    <table>
+                        <tr>
+                            <td class="align_center">序号</td>
+                            <td class="align_center">到期日期</td>
+                            <td class="align_center">数量合计</td>
+                            <td class="align_center">金额合计</td>
+                            <td class="align_center">操作</td>
+                        </tr>
+                        <tr ng-repeat="item in pmData.holdingDueDateGroupResult">
+                            <td class="align_center" ng-bind="$index+1"></td>
+                            <td class="align_center" ng-bind="item.dueDate"></td>
+                            <td class="number_type" ng-bind="item.number | number:effectiveNumber"></td>
+                            <td class="number_type" ng-bind="item.amount | number:0"></td>
+                            <td class="align_center pointer main_color" ng-click="showMoreList(item, 'dueDate')">查看</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" class="align_center">
+                                <ul class="clearfix pm_part_top10_pagination">
+                                    <li>共<span ng-bind="pagePogination.totalCountDueDate"></span>条记录，<span ng-bind="pagePogination.pageIndexDueDate"></span>/<span ng-bind="pagePogination.pageTotalDueDate"></span>页</li>
+                                    <li><a class="main_color" href="javascript:;" ng-click="toPageDueDate(1)">首页</a></li>
+                                    <li><a class="main_color" href="javascript:;" ng-click="toPageDueDate(pagePogination.pageIndexDueDate-1)">上一页</a></li>
+                                    <li><a class="main_color" href="javascript:;" ng-click="toPageDueDate(+pagePogination.pageIndexDueDate+1)">下一页</a></li>
+                                    <li>到第 <input class="pagination_sel" type="text" ng-model="goIndex"/> 页</li>
+                                    <li><a href="javascript:;" class="main_color pointer" ng-click="toPageDueDate(goIndex)">前往</a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowMoreList.top10">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>债券名称</th>
+                    <th>数量</th>
+                    <th>金额</th>
+                </tr>
+                <tr ng-repeat="item in Top10MoreItems">
+                    <td class="align_center" ng-bind="item.productName"></td>
+                    <td class="number_type">{{item.productNumber | number:0}}</td>
+                    <td class="number_type">{{item.productAmount | number:effectiveNumber}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowMoreList.dueDate">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>债券名称</th>
+                    <th>数量</th>
+                    <th>金额</th>
+                </tr>
+                <tr ng-repeat="item in dueDateMoreItems">
+                    <td class="align_center" ng-bind="item.productName"></td>
+                    <td class="number_type">{{item.productNumber | number:0}}</td>
+                    <td class="number_type">{{item.productAmount | number:effectiveNumber}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

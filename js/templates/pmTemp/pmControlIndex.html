@@ -1,0 +1,89 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/fundManagement.css">
+<link rel="stylesheet" href="css/templates/positionManagement.css">
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="pm-main" ng-show="pmKey=='main'">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">选择日期</span>
+            <input class="common-input form-control" type="text" id="pmMainWorkday" ng-model="pmS.summaryWorkday" def-laydate ng-change="getMainSummary(pmS.summaryWorkday)">
+        </div>
+        <div class="common-search-part">
+            <span class="common-label" ng-dblclick="editRepoCost()">回购成本比例：</span>
+            <span class="common-label" ng-bind="repoCostPercent" ng-dblclick="editRepoCost()" ng-hide="isEditRepoCost"></span>
+            <input class="common-input form-control" ng-model="repoCostPercent" ng-blur="subRepoCost(repoCostPercent)" ng-show="isEditRepoCost" />
+        </div>
+    </div>
+    <div class="fm_inner pm-payment__inner">
+        <table class="pm-main_table table">
+            <colgroup>
+                <col width="50%" >
+                <col width="25%" >
+                <col width="25%" >
+            </colgroup>
+            <tr>
+                <td>估值使用日期</td>
+                <td class="number_type" ng-bind="summary.workday | date:'yyyy-MM-dd'"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>仓位修正久期</td>
+                <td class="number_type" ng-bind="summary.sumModidura"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>持仓量</td>
+                <td class="number_type" ng-bind="summary.sumAmount | number:0"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>现货(含利率)DV01</td>
+                <td class="number_type" ng-bind="summary.dv01 | number:effectiveNumber"></td>
+                <td class="main_color pointer" ng-click="goDetail('spot')">查看</td>
+            </tr>
+            <tr>
+                <td>期货DV01</td>
+                <td class="number_type" ng-bind="summary.futureDv01 | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>利率债DV01</td>
+                <td class="number_type" ng-bind="summary.rateBondDv01 | number:effectiveNumber"></td>
+                <td class="main_color pointer" ng-click="goDetail('ratePlate')">查看</td>
+            </tr>
+            <tr>
+                <td>Interest</td>
+                <td class="number_type" ng-bind="summary.interest | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Funding</td>
+                <td class="number_type" ng-bind="summary.funding | number:effectiveNumber"></td>
+                <td class="main_color pointer" ng-click="goDetail('funding')">查看</td>
+            </tr>
+            <tr>
+                <td>Carry</td>
+                <td class="number_type" ng-bind="summary.carry | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Position DV01</td>
+                <td class="number_type" ng-bind="summary.positionDv01 | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>AUM</td>
+                <td class="number_type" ng-bind="summary.aum | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Net DV01</td>
+                <td class="number_type" ng-bind="summary.netDv01 | number:effectiveNumber"></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div pm-spot class="fm_wrap later_show" ng-show="pmKey=='spot'"></div>
+<div pm-rate-plate class="fm_wrap later_show" ng-show="pmKey=='ratePlate'"></div>
+<div pm-funding class="fm_wrap later_show" ng-show="pmKey=='funding'"></div>

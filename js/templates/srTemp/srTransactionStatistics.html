@@ -1,0 +1,127 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">开始日期</span>
+            <input class="common-input form-control" ng-model="sr.startDate" type="text" id="startDate" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">结束日期</span>
+            <input class="common-input form-control" ng-model="sr.endDate" type="text" id="endDate" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="search()"><i class="glyphicon glyphicon-search"></i>查询</span>
+            <span class="btn common-btn" ng-click="exportData()"><i class="glyphicon glyphicon-download-alt"></i>导出</span>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content">
+        <div class="table_head">
+            <table class="sr_table_ts">
+                <colgroup>
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col />
+                </colgroup>
+                <tr>
+                    <th rowspan="2" style="font-weight: bold">序号</th>
+                    <th rowspan="2" style="font-weight: bold">交易员</th>
+                    <th colspan="2" style="font-weight: bold">现券买入</th>
+                    <th colspan="2" style="font-weight: bold">现券卖出</th>
+                    <th colspan="2" style="font-weight: bold">质押式融资</th>
+                    <th colspan="2" style="font-weight: bold">质押式融券</th>
+                    <th colspan="2" style="font-weight: bold">买断式融资</th>
+                    <th colspan="2" style="font-weight: bold">买断式融券</th>
+                    <th colspan="2" style="font-weight: bold">过券</th>
+                    <th colspan="2" style="font-weight: bold">资金借入</th>
+                    <th colspan="2" style="font-weight: bold">资金借出</th>
+                </tr>
+                <tr>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                    <th>笔数</th>
+                    <th>金额(亿)</th>
+                </tr>
+            </table>
+        </div>
+        <div class="table_body" style="height: auto">
+            <table class="sr_table_ts">
+                <colgroup>
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="5%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col width="4.9%" >
+                    <col />
+                </colgroup>
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td ng-bind="item.userName"></td>
+                    <td ng-bind="item.buyCount | number"></td>
+                    <td ng-bind="item.buyAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.sellCount | number"></td>
+                    <td ng-bind="item.sellAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.sellRepoCount | number"></td>
+                    <td ng-bind="item.sellRepoAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.reverseRepoCount | number"></td>
+                    <td ng-bind="item.reverseRepoAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.buyoutSellRepoCount | number"></td>
+                    <td ng-bind="item.buyoutSellRepoAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.buyoutReverseRepoCount | number"></td>
+                    <td ng-bind="item.buyoutReverseRepoAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.transferCount | number"></td>
+                    <td ng-bind="item.transferAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.capitalInCount | number"></td>
+                    <td ng-bind="item.capitalInAmount/100000000 | number: 4"></td>
+                    <td ng-bind="item.capitalOutCount | number"></td>
+                    <td ng-bind="item.capitalOutAmount/100000000 | number: 4"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

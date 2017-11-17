@@ -1,0 +1,103 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search mb-0">
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="showEdit('add')">修正</span>
+        </div>
+    </div>
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">产品名称</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="vmS.vmFundId">
+                <ui-select-match placeholder="产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fund.fundId as fund in fundNames | filter: $select.search">
+                    <span ng-bind="fund.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content vm_fundAsset_content">
+        <div ui-grid="gridOptions" class="grid" ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isEdit">
+    <div class="tmTicket_addNew_wrap fm_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" drag-handle>录入</div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="tmTicket_fundName">
+                <span class="label_title">产品名称：</span>
+                <select class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNames" ng-model="vmFund.fundId" ng-disabled="vmFund.isUpdate">
+                    <option value="">--请选择产品名称--</option>
+                </select>
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">开始时间：</span>
+                <input type="text" ng-model="vmFund.startDate" def-laydate id="vmStartDate" ng-disabled="vmFund.isUpdate" />
+            </div>
+            <div class="tmTicket_label tmTicket_price">
+                <span class="label_title">修正金额：</span>
+                <input type="text" ng-model="vmFund.delta" />
+                元
+            </div>
+            <div class="tmTicket_note">
+                <span class="label_title">备注：</span>
+                <textarea ng-model="vmFund.note"></textarea>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+            <div class="tm_confirm" ng-click="subEdit()">确认</div>
+            <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+        </div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isClose">
+    <div class="tmTicket_addNew_wrap fm_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" drag-handle ng-bind="closeTitle"></div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="tmTicket_note">
+                <span class="label_title">备注：</span>
+                <textarea ng-model="note1"></textarea>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+            <div class="tm_confirm" ng-click="subState()" ng-bind="closeTitle"></div>
+            <div class="tm_cancel" ng-click="cancelState()">取消</div>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowMoreList">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>操作人员</th>
+                    <th>操作时间</th>
+                    <th>操作</th>
+                    <th>修正金额</th>
+                    <th>备注</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td ng-bind="item.userName"></td>
+                    <td class="number_type" ng-bind="item.delta | number:4"></td>
+                    <td ng-bind="item.modifyTime | date:'yyyy-MM-dd HH:mm:ss'"></td>
+                    <td>{{item.state==0?'禁用':item.state==1?'启用':item.state==2?'创建':'修改'}}</td>
+                    <td title={{item.note}} ng-bind="item.note1?item.note1:'--'"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

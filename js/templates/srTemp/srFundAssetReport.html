@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search-float clearfix">
+        <div class="pull-left common-flex">
+            <div class="common-search-part">
+                <span class="common-label">产品名称</span>
+                <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="sel.fund">
+                    <ui-select-match placeholder="请选择产品名称" allow-clear="true">
+                        <span ng-bind="$select.selected.fundName"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="fund in (fundNames | filter: $select.search) track by $index">
+                        <span ng-bind="fund.fundName"></span>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        没有匹配产品名称
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="common-search-part">
+                <span class="btn common-btn" ng-click="getFundName()">查询全部日期</span>
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">日期选择</span>
+                <input class="common-input form-control" type="text" id="srFundDate" def-laydate ng-model="srFundDate">
+            </div>
+            <div class="common-search-part">
+                <span class="btn common-btn" ng-click="getFundName()">查询全部产品</span>
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="common-search-part">
+                <span class="btn common-btn" ng-click="getCompareData()">比对</span>
+                <span class="btn common-btn" ng-click="getCompareAllData()">全部</span>
+            </div>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content">
+        <div ui-grid="gridOptions" class="grid" ui-grid-selection ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>

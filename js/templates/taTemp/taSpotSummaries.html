@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="css/templates/positionManagement.css">
+<div class="tm_addNew clearfix" style="padding: 5px 20px;">
+    <div class="float-left">
+        <div class="common-search-part">
+            <span class="common-label">起止日期：</span>
+            <input class="common-input form-control" type="text" ng-model="searchForm.startDate" def-laydate id="sStartDate">
+            <span class="common-label">-</span>
+            <input class="common-input common-ml-0 form-control" type="text" ng-model="searchForm.endDate" def-laydate id="sEndDate">
+        </div>
+    </div>
+    <div class="float-left">
+        <div class="common-search-part">
+            <span class="common-btn btn" ng-click="getNbSummaries(searchForm)"><i class="glyphicon glyphicon-search" ></i>查询</span>
+        </div>
+    </div>
+    <div class="float-right">
+        <div class="common-search-part">
+            <span class="common-btn btn" ng-click="changeTypeStyle()" ng-bind="typeStyle"></span>
+        </div>
+    </div>
+</div>
+<div class="pm_part_top10" ng-show="typeStyle==='列表模式'">
+    <div class="pm_chart_header align_center">
+        盈亏走势图
+    </div>
+    <div class="pm_chart_body">
+        <nvd3 options="summaryOption" data="summaryData" api="api"></nvd3>
+    </div>
+</div>
+<div class="pm_part_top10" style="overflow: auto;position: absolute;top: 75px;left: 0;right: 0;bottom: 0;" ng-hide="typeStyle==='列表模式'">
+    <div class="pm_chart_header align_center">
+        盈亏统计表
+    </div>
+    <div class="pm_top10_body">
+        <div class="pm_table_body">
+            <table>
+                <tr>
+                    <td class="align_center">序号</td>
+                    <td class="align_center">日期</td>
+                    <td class="align_center">实际盈亏(元)</td>
+                    <td class="align_center">总盈亏(元)</td>
+                </tr>
+                <tr ng-repeat="item in summaryDataList">
+                    <td class="align_center" ng-bind="$index+1"></td>
+                    <td class="align_center" ng-bind="item.workday | date:'yyyy-MM-dd'"></td>
+                    <td class="number_type" ng-bind="item.actualProfit | number:effectiveNumber"></td>
+                    <td class="number_type" ng-bind="item.totalProfit | number:effectiveNumber"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

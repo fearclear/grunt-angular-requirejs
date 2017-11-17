@@ -1,0 +1,113 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<link rel="stylesheet" href="css/templates/riskManagement.css">
+<link rel="stylesheet" href="css/select.css">
+<style>
+    .analysisTable{
+        width: 100%;
+    }
+    .analysisTableWrap{
+        max-height: 425px;
+        overflow: auto;
+    }
+    .analysisTable th,
+    .analysisTable td{
+        border: 1px solid #efefef;
+        text-align: center;
+        vertical-align: middle;
+        padding: 5px 2px;
+        cursor: default;
+    }
+    .analysisTable thead tr{
+        background: #9dd2ff;
+    }
+    .analysisTable tbody tr:nth-child(even){
+        background: #f6f9ff;
+     }
+    .analysisTable tbody tr:nth-child(odd){
+        background: #f8f8f8;
+    }
+    .analysisSel{
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+</style>
+<div class="tm_wrap">
+    <div class="tm_addNew">
+        <a class="tmOwn_addNew rm_main_add" href="javascript:;" ng-click="showCtrl('add')">新建</a>
+        <!--<a class="tmOwn_addNew rm_main_add pull-right" href="javascript:;" ng-click="showCtrl('add')">配置规则视图</a>-->
+        <!--<a class="tmOwn_addNew rm_main_add pull-right" href="javascript:;" ng-click="showCtrl('add')">行业规则视图</a>-->
+    </div>
+    <div class="tm_main rm_main_sub_orders">
+        <div ui-grid="gridOptions" class="grid" ui-grid-tree-view ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isEdit">
+    <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" ng-bind="form.title" drag-handle></div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="tmTicket_label">
+                <span class="label_title">定向指标：</span>
+                <select ng-disabled="form.flag === 'trade'" class="tm_select" ng-options="target.targetid as target.target for target in params.target" ng-model="form.targetid">
+                </select>
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">关键字1：</span>
+                <input ng-disabled="form.flag === 'trade'" type="text" ng-model="form.reg1">
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">关键字2：</span>
+                <input ng-disabled="form.flag === 'trade'" type="text" ng-model="form.reg2">
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">关键字3：</span>
+                <input ng-disabled="form.flag === 'trade'" type="text" ng-model="form.reg3">
+            </div>
+            <div class="tmTicket_note">
+                <span class="label_title">匹配规则：</span>
+                <select ng-disabled="form.flag === 'trade'" class="tm_select" ng-options="tag.id as tag.label for tag in params.tag" ng-model="form.tag">
+                </select>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+            <div class="tm_confirm" ng-click="subEdit()" ng-bind="form.confirm">确认</div>
+            <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+        </div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isShowTradeRelate">
+    <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" drag-handle>
+            <span>分配行业</span>
+            <span style="float: right;margin-right: 10px" class="pointer" ng-click="cancelEdit()">[关闭]</span>
+        </div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="pull-left col-xs-12 analysisTableWrap">
+                <table class="analysisTable">
+                    <tr>
+                        <th>一级行业</th>
+                        <th>二级行业</th>
+                        <th>操作</th>
+                    </tr>
+                    <tr ng-repeat="item in tradeList">
+                        <td ng-bind="item.tradeOne"></td>
+                        <td ng-bind="item.trade"></td>
+                        <td ng-click="deleteTradeRelate(item)" class="tm_state_pass pointer">删除</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select class="analysisSel" ng-options="tradeBak as tradeBak.trade for tradeBak in params.tradeBak" ng-model="form.tradeBak" ng-change="changeSelTrade2(form.tradeBak.SubTrade)"></select>
+                        </td>
+                        <td>
+                            <select class="analysisSel" ng-options="trade.tradeid as trade.trade for trade in params.trade" ng-model="form.tradeid"></select>
+                        </td>
+                        <td class="main_color pointer" ng-click="addTradeRelate(form)">添加</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+        </div>
+    </div>
+</div>

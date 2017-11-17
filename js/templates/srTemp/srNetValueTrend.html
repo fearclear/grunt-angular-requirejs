@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<div class="sr_fundAsset_wrap">
+    <div class="cmMain_search clearfix" style="padding-top: 14px">
+        <div class="cmSearch_part clearfix">
+            <div class="sr_span_wrap">
+                <span>选择产品：</span>
+            </div>
+            <div class="sr_sel_wrap" ng-repeat="part in cmSearchParts track by part.index">
+                <select ng-style="part.style" class="sr_fundAsset_nav" ng-options="{id: fund.fundId, name: fund.fundName} as fund.fundName for fund in fundNames" ng-model="part.fund" ng-change="getFundNetValue(part)">
+                    <option value="">请选择产品</option>
+                </select>
+                <div class="sr_after-sel pointer" ng-click="delPart(part)">X</div>
+            </div>
+        </div>
+        <div class="cmSearch_part" style="margin-left: 24px">
+            <div class="cmAddNewFundSelect pointer" ng-click="addSearchPart(cmSearchParts.length)">+</div>
+        </div>
+    </div>
+    <div class="cmMain_search clearfix">
+        <div class="cmSearch_part">
+            <span>期指时间：</span>
+            <input type="text" class="sr_netValue_input" id="srNetValueStart" ng-model="sr.startDate" ng-change="changeDate()" def-laydate>
+        </div>
+        <div class="cmSearch_part" style="margin-left:5px">
+            <span>至</span>
+            <input style="margin-left:2px" type="text" class="sr_netValue_input" id="srNetValueEnd" ng-model="sr.endDate" ng-change="changeDate()" def-laydate>
+        </div>
+        <div class="cmSearch_part" style="margin-left:20px">
+            <span>净值类型：</span>
+            <select class="sr_fundAsset_nav" style="border: 1px solid #ddd" ng-options="step.code as step.name for step in steps" ng-model="step" ng-change="changeStep(step)">
+                <option value="">净值类型</option>
+            </select>
+        </div>
+        <div class="cmSearch_part" style="margin-left: 20px">
+            <span>附加基准：</span>
+            <label class="sr_netValue_label">
+                <input type="checkbox" class="sr_netValue_check" ng-model="srCs" ng-true-value="'037.CS'" ng-false-value="0" ng-change="addQuote(srCs)">
+                <b class="hideCheck">中债指权</b>
+            </label>
+            <label class="sr_netValue_label" style="margin-left: 24px">
+                <input type="checkbox" class="sr_netValue_check" ng-model="srSh" ng-true-value="'000300.SH'" ng-false-value="''" ng-change="addQuote(srSh)">
+                <b class="hideCheck">沪深300</b>
+            </label>
+        </div>
+    </div>
+    <div class="sr_netValue_content">
+        <nvd3 options="fundNetOption" data="fundNetData"></nvd3>
+    </div>
+</div>

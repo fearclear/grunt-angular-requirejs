@@ -1,0 +1,252 @@
+<link rel="stylesheet" href="css/templates/fundManagement.css">
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="fm_wrap">
+    <div class="fm_addNew clearfix">
+        <span class="search_btn pointer" ng-click="showEdit('add')">新增</span>
+    </div>
+    <div class="fm_inner">
+        <div ui-grid="gridOptions" class="grid" ui-grid-edit ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit">
+        <div class="tmTicket_addNew_wrap fm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="fmFund.title" drag-handle>新增产品</div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div ng-show="showMoreForm === 1">
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品代码：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.fundCode" placeholder="产品代码" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品全称：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.fundLongName" placeholder="产品全称" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品简称：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.fundName" placeholder="产品简称" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品类型：</span>
+                        <select class="tm_select" ng-options="fundType.code as fundType.name for fundType in fundTypes" ng-model="fmFund.fundType">
+                            <option value="">--请选择产品类型--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品负责人：</span>
+                        <select class="tm_select" ng-options="trader.userId as trader.userName for trader in traderNames" ng-model="fmFund.userId">
+                            <option value="">--请选择产品负责人--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">主动管理：</span>
+                        <div class="tm_radio">
+                            <input type="radio" id="administrationIn" name="administration" ng-model="fmFund.administration" value="yes" ng-checked="true">
+                            <label for="administrationIn" class="label_first">是</label>
+                            <input type="radio" id="administrationOut" name="administration" ng-model="fmFund.administration" value="no">
+                            <label for="administrationOut">否</label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">成立日期：</span>
+                        <input class="tm_select" ng-model="fmFund.startTime" type="text" id="fmStartTime" def-laydate placeholder="成立日期" />
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">参考收益：</span>
+                        <input type="text" ng-model="fmFund.profit" placeholder="参考收益" />
+                        %
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">托管渠道：</span>
+                        <select class="tm_select" ng-options="fundChannel.code as fundChannel.name for fundChannel in fundChannels" ng-model="fmFund.fundChannel">
+                            <option value="">--请选择托管渠道--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">募集规模：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.amount" placeholder="募集规模" />
+                        万元
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">项目名称：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.productName" placeholder="项目名称" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">下一个开放日：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.nextOpenDate" id="fmNextOpenDate" def-laydate placeholder="下一个开放日" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">到期日：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.endDate" id="fmEndDate" def-laydate placeholder="到期日" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">下一个分红日：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.nextBonusDate" id="fmNextBonusDate" def-laydate placeholder="下一个分红日" />
+                    </div>
+                </div>
+                <div ng-show="showMoreForm === 2">
+                    <div class="tmTicket_label">
+                        <span class="label_title">业绩基准：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.baseAchievement" placeholder="业绩基准" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">固定投顾费：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.fixedFee" placeholder="固定投顾费" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">超额分成：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.moreInto" placeholder="超额分成" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">管理费：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.managerFee" placeholder="管理费" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">托管费：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.custodianFee" placeholder="托管费" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">销售费：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.sellFee" placeholder="销售费" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">预警线：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.warning" placeholder="预警线" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">止损线：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.stopLoss" placeholder="止损线" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">可转债：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.changeBond" placeholder="可转债" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">PPN：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.ppn" placeholder="PPN" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">分级A：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.levelA" placeholder="分级A" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">国债期货：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.bondFutures" placeholder="国债期货" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">杠杆：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.leverage" placeholder="杠杆" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">估值法：</span>
+                        <select class="tm_select" ng-model="fmFund.valuationType">
+                            <option value="摊余成本法">摊余成本法</option>
+                            <option value="成本法">成本法</option>
+                            <option value="市值法">市值法</option>
+                        </select>
+                    </div>
+                </div>
+                <div ng-show="showMoreForm === 3"><!--
+                    <div class="tmTicket_label">
+                        <span class="label_title">投资顾问：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.investmentAdviser" placeholder="投资顾问" />
+                    </div>-->
+                    <div class="tmTicket_label">
+                        <span class="label_title">投资顾问：</span>
+                        <select class="tm_select" ng-model="fmFund.record">
+                            <option value="蓝石资管">蓝石资管</option>
+                            <option value="北京蓝石致远">北京蓝石致远</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">托管机构：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.trusteeAgency" placeholder="托管机构" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">投资策略：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.investmentStrategy" placeholder="投资策略" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">产品结构：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-model="fmFund.productMix" value='平层'>
+                                平层
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="fmFund.productMix" value='结构化'>
+                                结构化
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">证券经纪商：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.commissionBroker" placeholder="证券经纪商" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">期货经纪商：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.futuresTrader" placeholder="期货经纪商" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">协会备案编码：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.recordCode" placeholder="协会备案编码" />
+                    </div><!--
+                    <div class="tmTicket_label">
+                        <span class="label_title">协会号：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.association" placeholder="协会号" />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">专户编码：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.specialAccount" placeholder="专户编码" />
+                    </div>-->
+                    <div class="tmTicket_label">
+                        <span class="label_title">是否分红：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-model="fmFund.isShare" value='是'>
+                                是
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="fmFund.isShare" value='否'>
+                                否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">开放期：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.open" placeholder="开放期" />
+                    </div><!--
+                    <div class="tmTicket_label">
+                        <span class="label_title">开放日期：</span>
+                        <input class="tm_select" type="text" ng-model="fmFund.openDate" placeholder="开放日期" />
+                    </div>-->
+                    <div class="tmTicket_label">
+                        <span class="label_title">有无交易户：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-model="fmFund.haveTrade" value='有'>
+                                有
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="fmFund.haveTrade" value='无'>
+                                无
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">备注：</span>
+                    <textarea ng-model="fmFund.note" style="width: 520px"></textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="fmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+            <div class="form-label-pre">
+                <span class="pointer main_color disSelect glyphicon glyphicon-menu-left" ng-click="changeShowMoreForm(-1)"></span>
+            </div>
+            <div class="form-label-next">
+                <span class="pointer main_color disSelect glyphicon glyphicon-menu-right" ng-click="changeShowMoreForm(1)"></span>
+            </div>
+        </div>
+    </div>
+</div>

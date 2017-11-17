@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="css/templates/fundManagement.css">
+<link rel="stylesheet" href="css/templates/valuationManagement.css">
+<div class="fm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">选定估值日期</span>
+            <input class="common-input form-control" ng-model="vmDate" ng-change="getHolding(vmDate)" type="text" id="vmDate" def-laydate />
+            <span><a href="javascript:;" ng-click="downLoad(reportResult.guzhiUrl)" class="btn common-btn">持仓报表导出</a></span>
+            <span><a href="javascript:;" ng-click="downLoad(reportResult.fengxianUrl)" class="btn common-btn">风险评估导出</a></span>
+        </div>
+    </div>
+    <div class="vm_inner">
+        <div class="table_head">
+            <table>
+                <colgroup>
+                    <col style="width: 5%;"/>
+                    <col style="width: 15%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col/>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th ng-click="order='$index';rev=!rev">序号</th>
+                    <th ng-click="order='fundName';rev=!rev">产品名称</th>
+                    <th ng-click="order='emailStatus';rev=!rev">估值邮件</th>
+                    <th ng-click="order='analyzeStatus';rev=!rev">估值解析</th>
+                    <th ng-click="order='compareTime';rev=!rev">持仓对账</th>
+                    <th ng-click="order='compareStatus';rev=!rev">对账结果</th>
+                    <th ng-click="order='$index';rev=!rev">详情</th>
+                    <th ng-click="order='fundChannel';rev=!rev">托管机构</th>
+                    <th>银行存款(元)</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table_body" id="tableBody">
+            <table>
+                <colgroup>
+                    <col style="width: 5%;"/>
+                    <col style="width: 15%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col style="width: 10%;"/>
+                    <col/>
+                </colgroup>
+                <tbody>
+                <tr ng-repeat="item in items | orderBy : order : rev">
+                    <td ng-bind="$index+1"></td>
+                    <td ng-bind="item.fundName"></td>
+                    <td>{{item.emailStatus == true ? '已下载' : '未送达'}}</td>
+                    <td>{{item.analyzeStatus == true ? '已解析' : '未解析'}}</td>
+                    <td>{{item.compareTime ? '已对账' : '未对账' }}</td>
+                    <td>{{item.compareStatus == true ? '成功' : '异常' }}</td>
+                    <td><a href="javascript:;" ng-click="downLoad(item.originUrl)" class="main_color">详情</a></td>
+                    <td ng-bind="item.fundChannel"></td>
+                    <td class="number_type">{{item.cash | number:2}}</td>
+                    <td class="vm_setWrap">
+                        <div class="vm_setCash" ng-show="item.isSetCash">
+                            <input class="vm_setInput" type="text" ng-model="item.cash"><a href="javascript:;"
+                                                                                           class="main_color"
+                                                                                           ng-click="subCash(item)">添加</a>
+                        </div>
+                        <a href="javascript:;" ng-click="setCash(item)" style="display: block" class="main_color">配置金额</a>
+                    </td>
+                    <td width="18px" ng-show="items.length<=14"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

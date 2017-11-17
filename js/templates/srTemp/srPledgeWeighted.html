@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="searchMain()"><i class="glyphicon glyphicon-search"></i>查询</span>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content">
+        <table class="sr_table">
+            <tr>
+                <td width="25%">总金额(万)：</td>
+                <td width="25%" ng-bind="sr.amount/10000 | number: 2"></td>
+                <td width="25%">总交易(笔)：</td>
+                <td width="25%" ng-bind="sr.count"></td>
+            </tr>
+            <tr>
+                <td>最低成本：</td>
+                <td><span ng-bind="sr.minRate"></span><span ng-bind="sr.minRate?'%':''"></span></td>
+                <td>最高成本：</td>
+                <td><span ng-bind="sr.maxRate"></span><span ng-bind="sr.maxRate?'%':''"></span></td>
+            </tr>
+            <tr>
+                <td>最短剩余期限：</td>
+                <td><span ng-bind="sr.minDays"></span><span ng-bind="sr.minDays?'天':''"></span></td>
+                <td>最长剩余期限：</td>
+                <td><span ng-bind="sr.maxDays"></span><span ng-bind="sr.maxDays?'天':''"></span></td>
+            </tr>
+            <tr class="sr_bold_weight">
+                <td>加权成本：</td>
+                <td><span ng-bind="sr.weightedRate | number:4"></span><span ng-bind="sr.weightedRate?'%':''"></span></td>
+                <td>加权期限：</td>
+                <td><span ng-bind="sr.weightedDays | number:2"></span><span ng-bind="sr.weightedDays?'天':''"></span></td>
+            </tr>
+        </table>
+    </div>
+</div>

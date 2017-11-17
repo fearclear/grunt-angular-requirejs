@@ -1,0 +1,109 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<link rel="stylesheet" href="css/templates/TKFundFunds.css">
+<div class="ar-upload clearfix">
+    <span ng-click="showCtrl()" class="icon-upload search_btn pointer disSelect">上传文件</span>
+</div>
+<div class="ar-head">
+    <img src="./img/analysis_report.png" alt="">
+</div>
+<div class="common-search">
+    <div class="common-search-part">
+        <span class="common-label">文件名称</span>
+        <input class="common-input form-control" type="text" ng-model="searchForm.fileName" >
+    </div>
+    <div class="common-search-part">
+        <span class="common-label">分析日期</span>
+        <input class="common-input form-control" type="text" def-laydate="" ng-model="searchForm.fileDate" >
+    </div>
+    <div class="common-search-part">
+        <span class="common-label">操作人</span>
+        <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="searchForm.excuter">
+            <ui-select-match placeholder="操作人" allow-clear="true">
+                <span ng-bind="$select.selected.userName"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="traderName.userId as traderName in delPutUsers">
+                <span ng-bind="traderName.userName"></span>
+            </ui-select-choices>
+            <ui-select-no-choice>
+                没有匹配结果
+            </ui-select-no-choice>
+        </ui-select>
+    </div>
+    <div class="common-search-part">
+        <span class="btn common-btn" ng-click="getFileInfo(searchForm)"><i class="glyphicon glyphicon-search"></i>查询</span>
+    </div>
+</div>
+<div class="ar-body">
+    <div ui-grid="gridOptions" class="grid" ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+</div>
+<style>
+    .type{
+        margin-bottom: 10px;
+    }
+    .table [class*='icon-']:before{
+        font-family: inherit;
+    }
+</style>
+<div class="tmTicket_addNew" ng-show="isEdit">
+    <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag style="margin-top:-240px;">
+        <div class="tmTicket_addNew_title" drag-handle>
+            文件上传
+            <span style="float: right;margin-right: 10px" class="pointer" ng-click="cancelEdit()">[关闭]</span>
+        </div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="clearfix type">
+                <span ng-click="showUpload()" class="icon-upload search_btn pointer disSelect">上传文件</span>
+                <input type="file" multiple class="search-btn pointer" nv-file-select uploader="uploader" style="position: absolute; opacity: 0; top: 0;width: 110px;" />
+            </div>
+            <div class="well my-drop-zone" nv-file-drop uploader="uploader" ng-show="uploader.isHTML5">
+                拖拽到此区域上传
+            </div>
+            <div style="max-height: 150px;overflow:auto;" ng-show="(hisQueue&&hisQueue.length)||(uploader.queue&&uploader.queue.length)" >
+                <table class="table">
+                    <colgroup>
+                        <col style="width: 300px" />
+                        <col style="width: 100px" />
+                        <col style="width: 100px" />
+                        <col style="width: 100px" />
+                        <col style="width: 100px" />
+                    </colgroup>
+                    <tbody>
+                    <tr ng-repeat="item in uploader.queue track by $index">
+                        <td><strong>{{ item.file.name }}</strong></td>
+                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                        <td ng-show="uploader.isHTML5" width="100px">
+                            <div class="progress" style="margin-bottom: 0;">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                        </td>
+                        <td nowrap>
+                            <button type="button" class="btn btn-success btn-xs" ng-click="uploadItem(item)" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                <span class="glyphicon glyphicon-upload"></span> 上传
+                            </button>
+                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                <span class="glyphicon glyphicon-ban-circle"></span> 取消
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">一级行业：</span>
+                <select class="analysisSel tm_select" ng-options="tradeBak as tradeBak.trade for tradeBak in params.tradeBak" ng-model="form.tradeBak" ng-change="changeSelTrade2(form.tradeBak.SubTrade)"></select>
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">二级行业：</span>
+                <select class="analysisSel tm_select" ng-options="trade.tradeid as trade.trade for trade in params.trade" ng-model="form.tradeid"></select>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/positionManagement.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<div class="pm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">估值时间：</span>
+            <input class="common-input form-control" ng-model="pmS.date" type="text" id="pmOVDate" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">产品名称：</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="pmS.fundId">
+                <ui-select-match placeholder="产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fund.fundId as fund in fundNames">
+                    <span ng-bind="fund.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="getFundOverView()"><i class="glyphicon glyphicon-search"></i>查询</span>
+        </div>
+    </div>
+    <div class="pm_body">
+        <div class="pm_part_holding_report" ng-show="fundInfo.length">
+            <table>
+                <tr>
+                    <th>序号</th>
+                    <th>项目名称</th>
+                    <th>产品</th>
+                    <th>规模(万元)</th>
+                    <th>成立日期</th>
+                    <th>下一开放日</th>
+                    <th>到期</th>
+                    <th>下一分红日</th>
+                    <th>业绩基准</th>
+                    <th>固定投顾费</th>
+                    <th>操作</th>
+                </tr>
+                <tr ng-repeat="item in fundInfo">
+                    <td ng-bind="$index+1"></td>
+                    <td ng-bind="item.productName"></td>
+                    <td ng-bind="item.fundName"></td>
+                    <td class="number_type" ng-bind="item.amount/10000 | number:4"></td>
+                    <td ng-bind="item.startTime"></td>
+                    <td ng-bind="item.nextOpenDate | date: 'yyyy-MM-dd'"></td>
+                    <td ng-bind="item.endDate | date: 'yyyy-MM-dd'"></td>
+                    <td ng-bind="item.nextBonusDate | date: 'yyyy-MM-dd'"></td>
+                    <td ng-bind="item.baseAchievement"></td>
+                    <td ng-bind="item.fixedFee"></td>
+                    <td class="main_color pointer" ng-click="showMore(item)">查看</td>
+                </tr>
+            </table>
+        </div>
+        <div class="pm_part_holding_chart">
+            <div class="pm_chart_header align_center">
+                净值走势图
+            </div>
+            <div class="pm_chart_body">
+                <nvd3 options="fundNetOption" data="fundNetData"></nvd3>
+            </div>
+        </div>
+        <div class="pm_part_holding_chart">
+            <div class="pm_chart_header align_center">
+                持仓券种分布
+            </div>
+            <div class="pm_chart_body">
+                <nvd3 options="holdingOption" data="holdingData"></nvd3>
+            </div>
+        </div>
+        <div class="pm_part_pie clearfix">
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额区域分布饼图-省
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieProvinceDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额一级行业分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieIndustryDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额评级分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieRatingDataAmount"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券金额企业性质分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieCompanyDataAmount"></nvd3>
+                </div>
+            </div>
+        </div>
+        <div class="pm_part_pie clearfix">
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量区域分布饼图-省
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieProvinceDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量一级行业分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieIndustryDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量评级分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieRatingDataNumber"></nvd3>
+                </div>
+            </div>
+            <div class="pm_part_pie_chart">
+                <div class="pm_chart_header align_center">
+                    债券数量企业性质分布饼图
+                </div>
+                <div class="pm_pie_chart_body">
+                    <nvd3 options="pieChartOption" data="pieCompanyDataNumber"></nvd3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="pm_overview_showMore" ng-show="isShowMore">
+    <div class="pm_overview_showMore_wrap" drag>
+        <div class="pm_overview_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="pm_overview_showMore_main clearfix">
+            <table class="showMoreTable">
+                <tr>
+                    <td>项目名称</td>
+                    <td>{{showInfo.productName}}</td>
+                    <td>产品简称</td>
+                    <td>{{showInfo.fundName}}</td>
+                </tr>
+                <tr>
+                    <td>产品类型</td>
+                    <td>{{showInfo.fundType}}</td>
+                    <td>是否主动管理</td>
+                    <td>{{showInfo.administration}}</td>
+                </tr>
+                <tr>
+                    <td>参考收益</td>
+                    <td>{{showInfo.profit}}</td>
+                    <td>托管渠道</td>
+                    <td>{{showInfo.fundChannel}}</td>
+                </tr>
+                <tr>
+                    <td>募集规模</td>
+                    <td>{{showInfo.amount}}</td>
+                    <td>成立日期</td>
+                    <td>{{showInfo.startTime}}</td>
+                </tr>
+                <tr>
+                    <td>下一个开放日</td>
+                    <td>{{showInfo.nextOpenDate | date: 'yyyy-MM-dd'}}</td>
+                    <td>到期</td>
+                    <td>{{showInfo.endDate | date: 'yyyy-MM-dd'}}</td>
+                </tr>
+                <tr>
+                    <td>下一个分红日</td>
+                    <td>{{showInfo.nextBonusDate | date:'yyyy-MM-dd'}}</td>
+                    <td>业绩基准</td>
+                    <td>{{showInfo.baseAchievement}}</td>
+                </tr>
+                <tr>
+                    <td>固定投顾费</td>
+                    <td>{{showInfo.fixedFee}}</td>
+                    <td>超额分成</td>
+                    <td>{{showInfo.moreInto}}</td>
+                </tr>
+                <tr>
+                    <td>管理费</td>
+                    <td>{{showInfo.managerFee}}</td>
+                    <td>托管费</td>
+                    <td>{{showInfo.custodianFee}}</td>
+                </tr>
+                <tr>
+                    <td>销售费</td>
+                    <td>{{showInfo.sellFee}}</td>
+                    <td>预警</td>
+                    <td>{{showInfo.warning}}</td>
+                </tr>
+                <tr>
+                    <td>止损</td>
+                    <td>{{showInfo.stopLoss}}</td>
+                    <td>可转债</td>
+                    <td>{{showInfo.changeBond}}</td>
+                </tr>
+                <tr>
+                    <td>PPN</td>
+                    <td>{{showInfo.ppn}}</td>
+                    <td>分级A</td>
+                    <td>{{showInfo.levelA}}</td>
+                </tr>
+                <tr>
+                    <td>国债期货</td>
+                    <td>{{showInfo.bondFutures}}</td>
+                    <td>杠杆</td>
+                    <td>{{showInfo.leverage}}</td>
+                </tr>
+                <tr>
+                    <td>估值法</td>
+                    <td>{{showInfo.valuationType}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

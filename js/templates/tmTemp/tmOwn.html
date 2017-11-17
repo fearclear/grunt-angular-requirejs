@@ -1,0 +1,1133 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="tm_wrap">
+    <div class="tm_addNew">
+        <!--<a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(1)">现券下单</a>-->
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(2)">质押式回购</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(3)">买断式回购</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(4)">一级交易</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(5)">申购赎回</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="ownAddNew(6)">交易所回购</a>
+    </div>
+    <div class="common-search">
+        <div class="common-search-part">
+            <div class="tmAll_business_type">
+                <span class="search_title">交易类型</span>
+                <label class="tmAll_business_type_label">
+                    <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.ticket" ng-true-value="1">
+                    <b class="hideCheck">现券下单</b>
+                </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buyBackZY" ng-true-value="2">
+                <b class="hideCheck">质押式回购</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buyBackMD" ng-true-value="3">
+                <b class="hideCheck">买断式回购</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.trading" ng-true-value="4">
+                <b class="hideCheck">一级交易</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buySell" ng-true-value="5">
+                <b class="hideCheck">申购赎回</b>
+            </label>
+            </div>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">产品名称</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="tmFundS.fundName">
+                <ui-select-match placeholder="请选择产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fundName.fundId as fundName in fundNamesNormal | filter: $select.search">
+                    <span ng-bind="fundName.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配产品名称
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">开始时间</span>
+            <input class="common-input form-control" ng-model="tmFundS.startTime" type="text" id="tmAllStart" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">结束时间</span>
+            <input class="common-input form-control" ng-model="tmFundS.endTime" type="text" id="tmAllEnd" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易人员</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="tmFundS.traderName">
+                <ui-select-match placeholder="请选择交易员" allow-clear="true">
+                    <span ng-bind="$select.selected.userName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="traderName.userId as traderName in traderNames | filter: $select.search">
+                    <span ng-bind="traderName.userName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易员
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易方向</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.direction">
+                <ui-select-match placeholder="请选择交易方向" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="direction.code as direction in directions">
+                    <span ng-bind="direction.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易方向
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">清算方式</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.liquidationSpeed">
+                <ui-select-match placeholder="请选择清算方式" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="liquidationSpeed.code as liquidationSpeed in liquidationSpeeds">
+                    <span ng-bind="liquidationSpeed.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配清算方式
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易状态</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.businessState">
+                <ui-select-match placeholder="请选择交易方向" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="businessState.code as businessState in businessStates">
+                    <span ng-bind="businessState.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易状态
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part common-btn-tm-sel">
+            <span class="common-btn btn" ng-click="search()"><i class="glyphicon glyphicon-search"></i>查询</span>
+            <span class="common-btn btn" ng-click="reset()">重置</span>
+        </div>
+    </div>
+    <div class="tm_main">
+        <table class="table">
+            <tr>
+                <th><input type="checkbox" ng-model="checkedAll" ng-change="isCheckedAll(checkedAll)"></th>
+                <th ng-click="order='$index';rev=!rev">序号</th>
+                <th ng-click="order='fundName';rev=!rev">产品名称</th>
+                <th ng-click="order='$index';rev=!rev">债券名称</th>
+                <th ng-click="order='businessDirection';rev=!rev">交易方向</th>
+                <th ng-click="order='amount';rev=!rev">净资金额(元)</th>
+                <th ng-click="order='transPrice';rev=!rev">返回金额(元)</th>
+                <th ng-click="order='counterpartyShortName';rev=!rev">交易对手/过券机构</th>
+                <th ng-click="order='interestRate';rev=!rev">利率</th>
+                <th ng-click="order='startTime';rev=!rev">开始时间</th>
+                <th ng-click="order='createTime';rev=!rev">截止时间</th>
+                <th ng-click="order='state';rev=!rev">交易状态</th>
+                <th ng-click="order='state';rev=!rev">指令详情</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-repeat="item in items | orderBy:order:rev"  ng-dblclick="update(item)">
+                <td><input type="checkbox" ng-model="item.isChecked" ng-change="checkChecked()"></td>
+                <td ng-bind="$index+1" ng-click="showMore(item)" class="main_color pointer underline"></td>
+                <td class="main_color aline_left" ng-bind="item.fundName"></td>
+                <td class="main_color aline_left"><div class="tm_note" title="{{item.bondNameMoreListsStr}}">{{item.bondNameShow}}</div></td>
+                <td class="aline_left" ng-bind="item.businessDirection"></td>
+                <td class="main_color number_type">{{(item.businessTypeCode==3||item.businessTypeCode==2)?(item.amount/1 | number:effectiveNumber):''}}</td>
+                <td class="main_color number_type">{{(item.businessTypeCode==3||item.businessTypeCode==2)?(item.transPrice/1 | number:effectiveNumber):item.amount/1}}</td>
+                <td class="aline_left">{{item.counterpartyShortName}}</td>
+                <td class="main_color number_type">{{item.interestRate/1 | number:effectiveNumber}}</td>
+                <td ng-bind="item.startTime"></td>
+                <td ng-bind="item.buyBackClosingDate"></td>
+                <td><span ng-bind="item.state" class="{{item.state=='待确认'?'tm_state_normal_show':item.state=='已撤销'?'tm_state_delete_show':'tm_state_pass_show'}}"></span></td>
+                <td><span ng-show="item.orderId" class="main_color pointer" ng-click="goOrder(item)">跳转</span></td>
+                <td class="handle" style="width: 270px">
+                    <div class="button-group">
+                        <a class="button" href="javascript:void(0)" ng-hide="item.businessTypeCode == 1" ng-class="{'tm_state_disabled' : !item.editable, 'border-gray': !item.editable, 'border-blue': item.editable}" ng-click="update(item)"><span class="icon-edit"></span> 修改</a>
+                        <a class="button" href="javascript:void(0)" ng-hide="item.businessTypeCode == 1" ng-class="{'tm_state_disabled' : item.state!=='待确认', 'border-gray': item.state != '待确认', 'border-red': item.state == '待确认'}" ng-click="deleteBusiness(item)"><span class="icon-trash-o"></span> 撤销</a>
+                        <a class="button" style="border-radius: 0 4px 4px 0" href="javascript:void(0)" ng-hide="item.state==='已确认'" ng-class="{'tm_state_disabled' : item.state != '待确认', 'border-gray': item.state != '待确认', 'border-blue': item.state == '待确认'}" ng-click="passBusiness(item)"><span class="icon-check-square-o"></span> 确认</a>
+                        <a class="button" ng-class="{'tm_state_disabled' : item.oldBusiness, 'border-gray': item.oldBusiness, 'border-blue': !item.oldBusiness}" ng-show="item.state==='已确认'" href="javascript:void(0)" ng-click="replyItem(item)"><span class="icon-reply"></span> 取消确认</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">总计(元)</td>
+                <td class="main_color aline_left"></td>
+                <td class="main_color aline_left"></td>
+                <td class="aline_left"></td>
+                <td class="main_color number_type"></td>
+                <td class="main_color number_type">{{tmOwnTotalPrice/1 | number: effectiveNumber}}</td>
+                <td class="main_color aline_left"></td>
+                <td class="main_color number_type"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isTicket">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isTicket')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>债券名称：</td>
+                        <td>{{tempTicket.bondNameShow}}</td>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                    </tr>
+                    <tr>
+                        <td>过券机构：</td>
+                        <td>{{tempTicket.businessTypeCode==='1'?tempTicket.transferAgentName:tempTicket.counterpartyShortName}}</td>
+                        <td>对手方：</td>
+                        <td>{{tempTicket.businessTypeCode==='1'?tempTicket.counterpartyUserName:tempTicket.sellOrganization}}</td>
+                    </tr>
+                    <tr>
+                        <td>委托方向：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                        <td>过券费用比例：</td>
+                        <td>{{tempTicket.bondProportion | number:effectiveNumber}}%</td>
+                    </tr>
+                    <tr>
+                        <td>交易净价：</td>
+                        <td>{{tempTicket.transPrice/1 | number:effectiveNumber}}元</td>
+                        <td>交易全价：</td>
+                        <td>{{tempTicket.fullAmount/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>数量：</td>
+                        <td>{{tempTicket.bondNumber | number:effectiveNumber}}</td>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>面额：</td>
+                        <td>{{tempTicket.denomination/10000 | number:effectiveNumber}}万元</td>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                    </tr>
+                    <tr>
+                        <td>过券负责人：</td>
+                        <td>{{tempTicket.bondHeadName}}</td>
+                        <td>清算速度：</td>
+                        <td>{{tempTicket.liquidationSpeed}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易时间：</td>
+                        <td>{{tempTicket.createTime}}</td>
+                        <td>状态：</td>
+                        <td class="{{tempTicket.state=='待确认'?'tm_state_normal':item.state=='撤销'?'tm_state_delete':'tm_state_pass'}}">{{tempTicket.state}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isBuyBack">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isBuyBack')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易对手：</td>
+                        <td>{{tempTicket.counterpartyShortName}}</td>
+                        <td>交易对手联系人：</td>
+                        <td>{{tempTicket.counterpartyUserName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>资金负责人：</td>
+                        <td>{{tempTicket.capitalUserName}}</td>
+                    </tr>
+                    <tr>
+                        <td>回购截止日期：</td>
+                        <td>{{tempTicket.buyBackClosingDate}}</td>
+                        <td>回购金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>回购天数：</td>
+                        <td>{{tempTicket.buyBackDay}}天</td>
+                        <td>开始时间：</td>
+                        <td>{{tempTicket.startTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>利率：</td>
+                        <td>{{tempTicket.interestRate | number:2}}%</td>
+                        <td>业务分类：</td>
+                        <td>{{tempTicket.serviceType}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                        <td>委托方向：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                    </tr>
+                    <tr>
+                        <td>清算速度：</td>
+                        <td>{{tempTicket.liquidationSpeed}}</td>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.transPrice | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>交易时间：</td>
+                        <td>{{tempTicket.createTime.split(' ')[0]}}</td>
+                        <td>下单人：</td>
+                        <td>{{tempTicket.operatorName}}</td>
+                    </tr>
+                    <tr ng-show="tempTicket.bondNameMoreLists.length">
+                        <td colspan="4" style="max-height: 200px; overflow: auto">
+                            <table class="tm_tableShowMore">
+                                <tr ng-repeat="bondNameMoreList in tempTicket.bondNameMoreLists">
+                                    <td>{{bondNameMoreList.securityId}}</td>
+                                    <td>{{bondNameMoreList.securityName}}</td>
+                                    <td>{{bondNameMoreList.volume}}</td>
+                                    <td>{{bondNameMoreList.proport}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isTrading">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isTrading')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>债券名称：</td>
+                        <td>{{tempTicket.bondName.securityName}}</td>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>交易净价：</td>
+                        <td>{{tempTicket.transPrice/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}元</td>
+                        <td>是否全价：</td>
+                        <td>{{tempTicket.fullPrice}}</td>
+                    </tr>
+                    <tr>
+                        <td>缴费方式：</td>
+                        <td>{{tempTicket.payType}}</td>
+                        <td>面额：</td>
+                        <td>{{tempTicket.denomination/10000 | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>数量：</td>
+                        <td>{{tempTicket.bondNumber | number:0}}</td>
+                        <td>上市时间：</td>
+                        <td>{{tempTicket.listingTime}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isBuySell">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isBuySell')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称：</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>登记人：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>生效时间：</td>
+                        <td>{{tempTicket.entryIntoForceTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}万元</td>
+                        <td>交易方式：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isTicket">
+        <div class="tmTicket_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="tmFund.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_fundName">
+                    <span class="label_title">产品名称：</span><select class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName">
+                    <option value="">--请选择产品名称--</option>
+                </select>
+                </div>
+                <div class="tmTicket_label" style="display: block">
+                    <div style="display: flex">
+                        <span class="label_title">债券名称：</span>
+                        <input type="text" ng-model="tmFund.bondName.securityName" ng-change="fuzzySearchSecurityName(tmFund.fundName, tmFund.bondName.securityName)">
+                    </div>
+                    <ul ng-show="isFuzzySearch" class="fuzzySearch fuzzySearch_move clearfix">
+                        <li ng-repeat="item in securityNames"
+                            ng-click="chooseSecurityNameTicket(item)">{{item.securityName+' | '+item.securityId}}</li>
+                    </ul>
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">过券费用比例：</span>
+                    <input type="text" ng-model="tmFund.bondProportion">
+                    厘
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">交易净价：</span>
+                    <input type="text" ng-model="tmFund.transPrice">
+                    元
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">交易全价：</span>
+                    <input type="text" ng-model="tmFund.fullAmount" ng-blur="getFullAmount()">
+                    元
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">数量：</span>
+                    <input type="text" ng-model="tmFund.bondNumber" ng-blur="getFullAmount()">
+                    张
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">结算金额：</span>
+                    <input type="text" ng-value="tmFund.bondNumber*tmFund.fullAmount || ''" disabled>
+                    元
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">面额：</span>
+                    <input type="text" ng-model="tmFund.denomination">
+                    万元
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">付费机构：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.payOrganization" value="buy" ng-checked="true">
+                            买方
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.payOrganization" value="sell">
+                            卖方
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">委托方向：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.businessDirection" value="1" ng-checked="true">
+                            买入
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.businessDirection" value="2">
+                            卖出
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易市场：</span>
+                    <select class="tm_select" ng-options="market.code as market.name for market in markets" ng-model="tmFund.market">
+                        <option value="">--请选择交易市场--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label" style="display: block">
+                    <div style="display: flex">
+                        <span class="label_title">过券机构：</span>
+                        <input type="text" ng-change="getTradeCounterparty(1, tmFund.transferAgentName)" ng-model="tmFund.transferAgentName" ng-blur="cancelFuzzySearch('isFuzzySearchCounter')">
+                    </div>
+                    <ul ng-show="isFuzzySearchCounter" class="fuzzySearch fuzzySearch_move clearfix">
+                        <li ng-repeat="item in counterpartyList" ng-bind="item.title"
+                            ng-click="chooseCounterpartyTicket(item)"></li>
+                    </ul>
+                </div>
+                <div class="tmTicket_label" style="display: block">
+                    <div style="display: flex">
+                        <span class="label_title">交易对手：</span>
+                        <input type="text" ng-change="getTradeCounterparty(2, tmFund.tradeCounterpartyName)" ng-model="tmFund.tradeCounterpartyName" ng-blur="cancelFuzzySearch('isFuzzySearchCounterTrade')">
+                    </div>
+                    <ul ng-show="isFuzzySearchCounterTrade" class="fuzzySearch fuzzySearch_move clearfix">
+                        <li ng-repeat="item in counterpartyTradeList" ng-bind="item.title"
+                            ng-click="chooseCounterpartyTrade(item)"></li>
+                    </ul>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">协议号：</span>
+                    <input type="text" ng-model="tmFund.protocolNumber">
+                </div>
+                <!--
+                <div class="tmTicket_label">
+                    <span>是否全价：</span>
+                    <div class="tm_radio">
+                        <input type="radio" id="fullPriceYes" name="fullPrice" ng-model="tmFund.fullPrice" value="yes" ng-checked="true">
+                        <label for="fullPriceYes" class="label_first">是</label>
+                        <input type="radio" id="fullPriceNo" name="fullPrice" ng-model="tmFund.fullPrice" value="no">
+                        <label for="fullPriceNo">否</label>
+                    </div>
+                </div>-->
+                <div class="tmTicket_label">
+                    <span class="label_title">交易员：</span>
+                    <select class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                        <option value="">--请选择交易员--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">过券负责人：</span>
+                    <select class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.bondHeadName">
+                        <option value="">--过券负责人--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">清算速度：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.liquidationSpeed" value="0" ng-checked="true" >
+                            T+0
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.liquidationSpeed" value="1">
+                            T+1
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">备注：</span>
+                    <textarea ng-model="tmFund.note">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isBuyBackZY">
+        <div class="{{(bondAvailables.length&&tmFund.businessDirection==3)?'tmTicket_addNew_wrap':'tmTicket_addNew_wrap tmTicket_addNew_wrap_small'}}" drag>
+            <div class="tmTicket_addNew_title" ng-bind="tmFund.title" drag-handle></div>
+            <div class="{{(bondAvailables.length&&tmFund.businessDirection==3)?'tmBuyBackZY_addNew_main clearfix':'tmBuyBackZY_addNew_main tmBuyBackZY_addNew_main_small clearfix'}}">
+                <div class="clearfix">
+                    <div class="tmTicket_fundName">
+                        <span class="label_title">产品名称：</span><!--
+                        --><select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName" ng-change="getBondAvailable(tmFund.fundName)">
+                            <option value="">--请选择产品名称--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label" style="display: block">
+                        <div style="display: flex;">
+                            <span class="label_title">交易对手：</span>
+                            <input type="text" ng-disabled="tmFund.changeBuyBackDate" placeholder="交易对手简称" ng-change="getCounterparty(tmFund.tempCounterparty)" ng-model="tmFund.tempCounterparty" ng-blur="cancelCounterparty()">
+                        </div>
+                        <ul ng-show="isFuzzySearchCounter" class="fuzzySearch fuzzySearch_move clearfix">
+                            <li ng-repeat="item in counterpartyList" ng-bind="item.counterpartyShortName"
+                                ng-click="chooseCounterparty(item)"></li>
+                        </ul>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易对手联系人：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.counterpartyUserName">
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易员：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                            <option value="">--请选择交易员--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">资金负责人：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="capitalUserId.userId as capitalUserId.userName for capitalUserId in traderNames" ng-model="tmFund.capitalUserId">
+                            <option value="">--请选择交易员--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">开始时间：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" ng-model="tmFund.startTime" ng-change="chooseWorkday()" type="text" id="tmZYstartTime" def-laydate init-today />
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">回购天数：</span>
+                        <input type="text" ng-model="tmFund.buyBackDay" ng-change="chooseWorkday()">
+                        天
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">回购截止日期：</span>
+                        <input ng-model="tmFund.buyBackClosingDate" ng-change="checkWorkday()" type="text" id="tmZYClosingDate" def-laydate />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">业务分类：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="serviceType.code as serviceType.name for serviceType in serviceTypes" ng-model="tmFund.serviceType">
+                            <option value="">--请选择业务分类--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易市场：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="market.code as market.name for market in markets" ng-model="tmFund.market">
+                            <option value="">--请选择交易市场--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">委托方向：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.businessDirection" value="3" ng-checked="true">
+                                融资回购
+                            </label>
+                            <label>
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.businessDirection" value="4">
+                                融券回购
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">清算速度：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.liquidationSpeed" value="0" ng-checked="true">
+                                T+0
+                            </label>
+                            <label>
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.liquidationSpeed" value="1">
+                                T+1
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">利率：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.interestRate" ng-blur="getTransPrice()">
+                        %
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">回购金额：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.amount" ng-hide="isShowNumberTypeAmount" ng-blur="showNumberType('isShowNumberTypeAmount', true);getTransPrice()" ng-change="turnNumber('amount', tmFund.amount)">
+                        <p ng-show="isShowNumberTypeAmount" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">{{tmFund.amount | number:effectiveNumber}}</p>
+                        元
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">结算金额：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.transPrice" ng-hide="isShowNumberTypeTransPrice" ng-blur="showNumberType('isShowNumberTypeTransPrice', true)" ng-change="turnNumber('transPrice', tmFund.transPrice)">
+                        <p ng-show="isShowNumberTypeTransPrice" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">{{tmFund.transPrice | number:effectiveNumber}}</p>
+                        元
+                    </div>
+                    <div class="tmBuyBackZY_table_main" ng-show="tempFundLists.length || tmFund.businessDirection==4">
+                        <table class="table autoTable">
+                            <thead>
+                            <tr>
+                                <th>债券代码</th>
+                                <th>债券简称</th>
+                                <th>质押数量</th>
+                                <th>质押比</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="tempFundList in tempFundLists" class="tmFund_handle_list">
+                                <td>
+                                    <input type="text" ng-model="tempFundList.securityId" ng-disabled="tmFund.businessDirection==3||tmFund.changeBuyBackDate" ng-change="fuzzySearch('id', tempFundList)" ng-blur="hideFuzzySearch('isFuzzySearchCode', tempFundList)">
+                                    <ul ng-show="tempFundList.isFuzzySearchCode" class="fuzzySearch clearfix">
+                                        <li ng-repeat="item in securityNames" ng-bind="item.securityId"
+                                            ng-click="chooseSecurityName(tempFundList, item)"></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="tempFundList.securityName" ng-disabled="tmFund.businessDirection==3||tmFund.changeBuyBackDate" ng-change="fuzzySearch('name', tempFundList)" ng-blur="hideFuzzySearch('isFuzzySearchId', tempFundList)">
+                                    <ul ng-show="tempFundList.isFuzzySearchId" class="fuzzySearch clearfix">
+                                        <li ng-repeat="item in securityNames" ng-bind="item.securityName"
+                                            ng-click="chooseSecurityName(tempFundList, item)"></li>
+                                    </ul>
+                                </td>
+                                <td><input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tempFundList.available" ng-blur="getAmount()"></td>
+                                <td><input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tempFundList.proport" ng-blur="getAmount()"></td>
+                                <td><a href="javascript:;" ng-click="deleteBondList($index)" class="main_color" style="color: red">删除</a></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" ng-show="tmFund.businessDirection==4" class="tmFund_addOneList" ng-click="addOneList()">+</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tmTicket_note">
+                        <span class="label_title">备注：</span>
+                        <textarea ng-model="tmFund.note">
+
+                </textarea>
+                    </div>
+                </div>
+                <div class="tmTicket_addNew_handle">
+                    <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                    <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_aside" ng-show="bondAvailables.length && tmFund.businessDirection==3">
+                <div class="tmTicket_addNew_aside_header">
+                    <table class="table">
+                        <tr>
+                            <th><input type="text" placeholder="债券代码" ng-model="keyword.keyCode" style="width: 80%;line-height: 20px; border: none"></th>
+                            <th><input type="text" placeholder="债券简称" ng-model="keyword.keyName" style="width: 80%;line-height: 20px; border: none"></th>
+                            <th>可压数量</th>
+                        </tr>
+                        <tr ng-repeat="bondAvailable in bondAvailables | filter: keyword.keyCode | filter: keyword.keyName | orderBy: 'available'" ng-click="appendTemp(bondAvailable)">
+                            <td ng-bind="bondAvailable.securityId"></td>
+                            <td ng-bind="bondAvailable.securityName"></td>
+                            <td ng-bind="bondAvailable.available | number"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isBuyBackMD">
+        <div drag class="{{(bondAvailables.length&&tmFund.businessDirection==7)?'tmTicket_addNew_wrap':'tmTicket_addNew_wrap tmTicket_addNew_wrap_small'}}">
+            <div class="tmTicket_addNew_title" ng-bind="tmFund.title" drag-handle></div>
+            <div class="{{(bondAvailables.length&&tmFund.businessDirection==7)?'tmBuyBackZY_addNew_main clearfix':'tmBuyBackZY_addNew_main tmBuyBackZY_addNew_main_small clearfix'}}">
+                <div class="clearfix">
+                    <div class="tmTicket_fundName">
+                        <span class="label_title">产品名称：</span><!--
+                        --><select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName" ng-change="getBondAvailable(tmFund.fundName)">
+                            <option value="">--请选择产品名称--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label" style="display: block">
+                        <div style="display: flex">
+                            <span class="label_title">交易对手：</span>
+                            <input ng-disabled="tmFund.changeBuyBackDate" type="text" placeholder="交易对手简称" ng-change="getCounterparty(tmFund.tempCounterparty)" ng-model="tmFund.tempCounterparty" ng-blur="cancelCounterparty()">
+                        </div>
+                        <ul ng-show="isFuzzySearchCounter" class="fuzzySearch fuzzySearch_move clearfix">
+                            <li ng-repeat="item in counterpartyList" ng-bind="item.counterpartyShortName"
+                                ng-click="chooseCounterparty(item)"></li>
+                        </ul>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易对手联系人：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.counterpartyUserName">
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易员：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                            <option value="">--请选择交易员--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">资金负责人：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="capitalUserId.userId as capitalUserId.userName for capitalUserId in traderNames" ng-model="tmFund.capitalUserId">
+                            <option value="">--请选择交易员--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">开始时间：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" ng-model="tmFund.startTime" ng-change="chooseWorkday()" type="text" id="tmMDStartTime" def-laydate init-today />
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">回购天数：</span>
+                        <input type="text" ng-model="tmFund.buyBackDay" ng-change="chooseWorkday()">
+                        天
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">回购截止日期：</span>
+                        <input ng-model="tmFund.buyBackClosingDate" ng-change="checkWorkday()" type="text" id="tmMDClosingDate" def-laydate />
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">业务分类：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="serviceType.code as serviceType.name for serviceType in serviceTypes" ng-model="tmFund.serviceType">
+                            <option value="">--请选择业务分类--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易市场：</span>
+                        <select ng-disabled="tmFund.changeBuyBackDate" class="tm_select" ng-options="market.code as market.name for market in markets" ng-model="tmFund.market">
+                            <option value="">--请选择交易市场--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">委托方向：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.businessDirection" value="7" ng-checked="true">
+                                融资回购
+                            </label>
+                            <label>
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.businessDirection" value="8">
+                                融券回购
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">清算速度：</span>
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.liquidationSpeed" value="0" ng-checked="true">
+                                T+0
+                            </label>
+                            <label>
+                                <input ng-disabled="tmFund.changeBuyBackDate" type="radio" ng-model="tmFund.liquidationSpeed" value="1">
+                                T+1
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">利率：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.interestRate" ng-blur="getTransPrice()">
+                        %
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">回购金额：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.amount" ng-hide="isShowNumberTypeAmount" ng-blur="showNumberType('isShowNumberTypeAmount', true);getTransPrice()" ng-change="turnNumber('amount', tmFund.amount)">
+                        <p ng-show="isShowNumberTypeAmount" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">{{tmFund.amount | number:effectiveNumber}}</p>
+                        元
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">结算金额：</span>
+                        <input ng-disabled="tmFund.changeBuyBackDate" type="text" ng-model="tmFund.transPrice" ng-hide="isShowNumberTypeTransPrice" ng-blur="showNumberType('isShowNumberTypeTransPrice', true)" ng-change="turnNumber('transPrice', tmFund.transPrice)">
+                        <p ng-show="isShowNumberTypeTransPrice" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">{{tmFund.transPrice | number:effectiveNumber}}</p>
+                        元
+                    </div>
+                    <div class="tmBuyBackZY_table_main" ng-show="tempFundLists.length || tmFund.businessDirection==8">
+                        <table class="table autoTable">
+                            <thead>
+                            <tr>
+                                <th>债券代码</th>
+                                <th>债券简称</th>
+                                <th>质押数量</th>
+                                <th>质押比(%)</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="tempFundList in tempFundLists" class="tmFund_handle_list">
+                                <td>
+                                    <input type="text" ng-model="tempFundList.securityId" ng-disabled="tmFund.businessDirection==7||tmFund.changeBuyBackDate" ng-change="fuzzySearch('code', tempFundList)" ng-blur="hideFuzzySearch('isFuzzySearchCode', tempFundList)">
+                                    <ul ng-show="tempFundList.isFuzzySearchCode" class="fuzzySearch clearfix">
+                                        <li ng-repeat="item in securityNames" ng-bind="item.securityId"
+                                            ng-click="chooseSecurityName(tempFundList, item)"></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="tempFundList.securityName" ng-disabled="tmFund.businessDirection==7||tmFund.changeBuyBackDate" ng-change="fuzzySearch('id', tempFundList)" ng-blur="hideFuzzySearch('isFuzzySearchId', tempFundList)">
+                                    <ul ng-show="tempFundList.isFuzzySearchId" class="fuzzySearch clearfix">
+                                        <li ng-repeat="item in securityNames" ng-bind="item.securityName"
+                                            ng-click="chooseSecurityName(tempFundList, item)"></li>
+                                    </ul>
+                                </td>
+                                <td><input type="text" ng-model="tempFundList.available" ng-blur="getAmount()"></td>
+                                <td><input type="text" ng-model="tempFundList.proport" ng-blur="getAmount()"></td>
+                                <td><a href="javascript:;" ng-click="deleteBondList($index)" class="main_color" style="color: red">删除</a></td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" ng-show="tmFund.businessDirection==8" class="tmFund_addOneList" ng-click="addOneList()">+</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tmTicket_note">
+                        <span class="label_title">备注：</span>
+                        <textarea ng-model="tmFund.note">
+
+                </textarea>
+                    </div>
+                </div>
+                <div class="tmTicket_addNew_handle">
+                    <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                    <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_aside" ng-show="bondAvailables.length && tmFund.businessDirection==7">
+                <div class="tmTicket_addNew_aside_header">
+                    <table class="table">
+                        <tr>
+                            <th><input type="text" placeholder="债券代码" ng-model="keyword.keyCode" style="width: 80%;line-height: 20px; border: none"></th>
+                            <th><input type="text" placeholder="债券简称" ng-model="keyword.keyName" style="width: 80%;line-height: 20px; border: none"></th>
+                            <th>可压数量</th>
+                        </tr>
+                        <tr ng-repeat="bondAvailable in bondAvailables | filter: keyword.keyCode | filter: keyword.keyName | orderBy: 'available'" ng-click="appendTemp(bondAvailable)">
+                            <td ng-bind="bondAvailable.securityId"></td>
+                            <td ng-bind="bondAvailable.securityName"></td>
+                            <td ng-bind="bondAvailable.available | number"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isTrading">
+        <div drag class="tmTicket_addNew_wrap tmTradingOrder_addNew_wrap">
+            <div drag-handle class="tmTicket_addNew_title" ng-bind="tmFund.title"></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_fundName">
+                    <span class="label_title">产品名称：</span><select class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName">
+                    <option value="">--请选择产品名称--</option>
+                </select>
+                </div>
+                <div class="tmTicket_label" style="display: block">
+                    <div style="display: flex">
+                        <span class="label_title">债券名称：</span>
+                        <input type="text" ng-model="tmFund.bondName.securityName" ng-change="fuzzySearchSecurityName(tmFund.fundName, tmFund.bondName.securityName)">
+                    </div>
+                    <ul ng-show="isFuzzySearch" class="fuzzySearch fuzzySearch_move clearfix">
+                        <li ng-repeat="item in securityNames"
+                            ng-click="chooseSecurityNameTicket(item)">{{item.securityName+' | '+item.securityId}}</li>
+                    </ul>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易市场：</span>
+                    <select class="tm_select" ng-options="market.code as market.name for market in markets" ng-model="tmFund.market">
+                        <option value="">--请选择交易市场--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易员：</span>
+                    <select class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                        <option value="">--请选择交易员--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">交易净价：</span>
+                    <input type="text" ng-model="tmFund.transPrice">
+                    元
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">结算金额：</span>
+                    <input type="text" ng-model="tmFund.amount">
+                    元
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">是否全价：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.fullPrice" value="yes" ng-checked="true">
+                            是
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.fullPrice" value="no">
+                            否
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">缴费方式：</span>
+                    <select class="tm_select" ng-options="payType.code as payType.name for payType in payTypes" ng-model="tmFund.payType">
+                        <option value="">--请选择缴费方式--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">面额：</span>
+                    <input type="text" ng-model="tmFund.denomination">
+                    万元
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">数量：</span>
+                    <input type="text" ng-model="tmFund.bondNumber">
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">上市时间：</span>
+                    <input ng-model="tmFund.listingTime" type="text" id="tmOwnTradingListingTime" def-laydate />
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">备注：</span>
+                    <textarea ng-model="tmFund.note">
+
+                </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isBuySell">
+        <div class="tmTicket_addNew_wrap tmBuySell_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="tmFund.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_fundName">
+                    <span class="label_title">产品名称：</span><select class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName">
+                    <option value="">--请选择产品名称--</option>
+                </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">登记人：</span>
+                    <select class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                        <option value="">--请选择登记人--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">生效时间：</span>
+                    <input ng-model="tmFund.entryIntoForceTime" type="text" id="tmOwnBuySellEntry" def-laydate />
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">结算金额：</span>
+                    <input type="text" ng-model="tmFund.amount">
+                    万元
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易方式：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.businessDirection" value="5" ng-checked="true">
+                            申购
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.businessDirection" value="6">
+                            赎回
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">备注：</span>
+                    <textarea ng-model="tmFund.note">
+
+                </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.isExchange">
+        <div drag class="tmTicket_addNew_wrap tmTradingOrder_addNew_wrap">
+            <div drag-handle class="tmTicket_addNew_title" ng-bind="tmFund.title"></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_fundName">
+                    <span class="label_title">产品名称：</span><select class="tm_select" ng-options="fundName.fundId as fundName.fundName for fundName in fundNamesNormal" ng-model="tmFund.fundName" ng-change="getBondAvailable(tmFund.fundName)">
+                    <option value="">--请选择产品名称--</option>
+                </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易员：</span>
+                    <select class="tm_select" ng-options="traderName.userId as traderName.userName for traderName in traderNames" ng-model="tmFund.traderName">
+                        <option value="">--请选择交易员--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">资金负责人：</span>
+                    <select class="tm_select" ng-options="capitalUserId.userId as capitalUserId.userName for capitalUserId in traderNames" ng-model="tmFund.capitalUserId">
+                        <option value="">--请选择交易员--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">开始时间：</span>
+                    <input ng-model="tmFund.startTime" ng-change="chooseWorkday()" type="text" id="tmZYstartTimeEx" def-laydate init-today />
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">回购天数：</span>
+                    <input type="text" ng-model="tmFund.buyBackDay" ng-change="chooseWorkday()">
+                    天
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">回购截止日期：</span>
+                    <input ng-model="tmFund.buyBackClosingDate" ng-change="checkWorkday()" type="text" id="tmZYClosingDateEx" def-laydate />
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">业务分类：</span>
+                    <select class="tm_select" ng-options="serviceType.code as serviceType.name for serviceType in serviceTypes" ng-model="tmFund.serviceType">
+                        <option value="">--请选择业务分类--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易市场：</span>
+                    <select class="tm_select" ng-options="market.code as market.name disable when market.sel for market in markets" ng-model="tmFund.market">
+                        <option value="">--请选择交易市场--</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">清算速度：</span>
+                    <div class="tm_radio">
+                        <label class="label_first">
+                            <input type="radio" ng-model="tmFund.liquidationSpeed" value="0" ng-checked="true">
+                            T+0
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tmFund.liquidationSpeed" value="1">
+                            T+1
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">利率：</span>
+                    <input type="text" ng-model="tmFund.interestRate" ng-blur="getTransPrice()">
+                    %
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">数量：</span>
+                    <input type="text" ng-model="tmFund.bondNumber" ng-blur="getAmountExChange()">
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">回购金额：</span>
+                    <input type="text" ng-model="tmFund.amount" ng-hide="isShowNumberTypeAmount" ng-blur="showNumberType('isShowNumberTypeAmount', true);getTransPrice()" ng-change="turnNumber('amount', tmFund.amount)">
+                    <p ng-show="isShowNumberTypeAmount" ng-dblclick="showNumberType('isShowNumberTypeAmount', false)">{{tmFund.amount | number:effectiveNumber}}</p>
+                    元
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">结算金额：</span>
+                    <input type="text" ng-model="tmFund.transPrice" ng-hide="isShowNumberTypeTransPrice" ng-blur="showNumberType('isShowNumberTypeTransPrice', true)" ng-change="turnNumber('transPrice', tmFund.transPrice)">
+                    <p ng-show="isShowNumberTypeTransPrice" ng-dblclick="showNumberType('isShowNumberTypeTransPrice', false)">{{tmFund.transPrice | number:effectiveNumber}}</p>
+                    元
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">备注：</span>
+                    <textarea ng-model="tmFund.note">
+
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit('exchange')" ng-bind="tmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,167 @@
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<link rel="stylesheet" href="css/ui_grid/fullcalendar.css">
+<div class="bm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">业务类型</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFund.warningType">
+                <ui-select-match placeholder="请选择业务类型" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="warningType.code as warningType in warningTypes track by $index">
+                    <span ng-bind="warningType.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配业务类型
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">产品名称：</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="tmFund.fundName">
+                <ui-select-match placeholder="请选择产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fundName.fundId as fundName in (fundNames | filter: $select.search) track by $index">
+                    <span ng-bind="fundName.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配产品名称
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">开始时间</span>
+            <input class="common-input" ng-model="tmFund.startTime" type="text" id="brStartTime" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">结束时间</span>
+            <input class="common-input" ng-model="tmFund.endTime" type="text" id="brEndtime" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="search()"><i class="glyphicon glyphicon-search"></i>查询</span>
+            <span class="btn common-btn" ng-click="reset()">重置</span>
+        </div>
+    </div>
+    <div class="br_main">
+        <div class="bm_main" ng-show="isShowDateList=='list'">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>业务类型</th>
+                    <th>产品名称</th>
+                    <th>债券名称</th>
+                    <th>数量</th>
+                    <th>时间</th>
+                    <th>金额（万元）</th>
+                    <th>备注</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td class="aline_left" ng-bind="item.warningType"></td>
+                    <td class="aline_left" ng-bind="item.fundName"></td>
+                    <td class="aline_left" ng-bind="item.bondName"></td>
+                    <td class="number_type">{{item.bondNumber | number:0}}</td>
+                    <td ng-bind="item.dueDate"></td>
+                    <td class="main_color number_type">{{item.amount/10000 | number:effectiveNumber}}</td>
+                    <td ng-bind="item.note"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tm_main" ng-show="isShowDateList=='paymentList'">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>业务类型</th>
+                    <th>产品名称</th>
+                    <th>流水单号</th>
+                    <th>时间</th>
+                    <th>金额（万元）</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td class="aline_left">缴款流水</td>
+                    <td class="aline_left" ng-bind="item.fundName"></td>
+                    <td class="aline_left" ng-bind="item.waterNumber"></td>
+                    <td ng-bind="item.extractionTime | date: 'yyyy-MM-dd'"></td>
+                    <td class="main_color number_type">{{item.productSize/10000 | number:effectiveNumber}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="showBusinessState" ng-show="isShowDateList=='date'">
+            <div style="float: right">单位（万元）</div>
+            <table class="table">
+                <colgroup>
+                    <col width="14%">
+                    <col width="14%">
+                    <col width="14%">
+                    <col width="14%">
+                    <col width="14%">
+                    <col width="14%">
+                    <col width="14%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>星期一</th>
+                    <th>星期二</th>
+                    <th>星期三</th>
+                    <th>星期四</th>
+                    <th>星期五</th>
+                    <th>星期六</th>
+                    <th>星期日</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="todoList in todoLists" ng-show="todoList.isShow">
+                    <td ng-repeat="tdTodo in todoList.todo" ng-click="showMoreData(tdTodo)" class="pointer" title="{{tdTodo.title}}">
+                        <div class="{{tdTodo.isToday?'todo_wrap isToday':'todo_wrap'}}">
+                            <div class="todo_header">
+                                <div class="todo_date">{{tdTodo.name}}</div>
+                                <div class="todo_month">{{tdTodo.month}}</div>
+                            </div>
+                            <div class="todo_content">
+                                <ul class="todo_item_wrap" ng-repeat="item in tdTodo.todo">
+                                    <li class="todo_item number_type todo_item_debt">{{item.debt/10000 | number:effectiveNumber}}</li>
+                                    <li class="todo_item number_type todo_item_recv">{{item.recv/10000 | number:effectiveNumber}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowMoreList">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>业务类型</th>
+                    <th>产品名称</th>
+                    <th>债券名称</th>
+                    <th>数量</th>
+                    <th>时间</th>
+                    <th>备注</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td class="aline_left" ng-bind="item.warningType"></td>
+                    <td class="aline_left" ng-bind="item.fundName"></td>
+                    <td class="aline_left" ng-bind="item.bondName"></td>
+                    <td class="number_type">{{item.bondNumber | number:0}}</td>
+                    <td ng-bind="item.dueDate"></td>
+                    <td ng-bind="item.note"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

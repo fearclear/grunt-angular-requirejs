@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="cmSearch_form_wrap">
+    <div class="cmSearch_form_nav">
+        <span ng-class="navKey=='c'?'main_color pointer':'pointer'" ng-click="changeType('c')">主体</span>
+        <span ng-class="navKey=='p'?'main_color pointer':'pointer'" ng-click="changeType('p')">债项</span>
+    </div>
+    <div>
+        <input auto-focus type="text" style="display: inline-block;float: left" placeholder="请输入{{navKey=='c'?'主体':'债项'}}或关键字" ng-model="fuzzyName" ng-change="changeFuzzyName(fuzzyName)" class="cmSearch_input" />
+        <span class="search_btn pointer" style="display:inline-block; margin-left: 0" ng-click="fuzzySearch(fuzzyName)"><i class="icon-search"></i>搜一下</span>
+    </div>
+    <ul ng-show="showList.length" class="cmSearch_form_list">
+        <li class="pointer main_color cmSearch_form_listItem" ng-repeat="item in showList" ng-click="openNewTab(item)" ng-bind-html="item.showName"></li>
+    </ul>
+</div>

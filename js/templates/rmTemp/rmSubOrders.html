@@ -1,0 +1,506 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<link rel="stylesheet" href="css/templates/riskManagement.css">
+<link rel="stylesheet" href="css/select.css">
+<div class="tm_wrap">
+    <div class="tm_addNew">
+        <a class="tmOwn_addNew rm_main_add" href="javascript:;" ng-click="addCtrl()">下指令</a>
+        <a class="tmOwn_addNew rm_main_add" href="javascript:;" title={{str}} ng-click="refreshCalculate()">风控重算</a>
+    </div>
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">卖出产品：</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="rmFormS.sellFundId">
+                <ui-select-match placeholder="产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fund.fundId as fund in fundNamesNormal | filter: $select.search">
+                    <span ng-bind="fund.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">买入产品：</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="rmFormS.buyFundId">
+                <ui-select-match placeholder="买入产品" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fund.fundId as fund in fundNamesNormal">
+                    <span ng-bind="fund.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易负责人：</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="rmFormS.tradeUser">
+                <ui-select-match placeholder="交易负责人" allow-clear="true">
+                    <span ng-bind="$select.selected.userName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="traderName.userId as traderName in traderNames | filter: $select.search">
+                    <span ng-bind="traderName.userName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">起止日期：</span>
+            <input class="common-input form-control" type="text" ng-model="rmFormS.startDate" def-laydate id="sStartDate" init-today>
+            <span class="common-label">-</span>
+            <input class="common-input common-ml-0 form-control" type="text" ng-model="rmFormS.endDate" def-laydate id="sEndDate" init-today>
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="searchMain()">搜索</span>
+        </div>
+    </div>
+    <div class="tm_main rm_main_sub_orders" style="bottom: 30px; top: 80px">
+        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+    <div class="tmTicket_addNew rm-addNew" ng-show="isEdit">
+        <div class="tmTicket_addNew_wrap rm-addNew-wrap rm-addNew-wrap-sub" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="rm-sub-inner">
+                <div class="tmTicket_addNew_main rm-addNew-main rm-addNew-sub clearfix">
+                    <div class="tmTicket_label">
+                        <span class="label_title" style="font-weight: bold">指令交易日期</span>：
+                        <input type="text" ng-model="rmForm.workday" def-laydate id="rmSubOrderWorkday" ng-change="selDate(rmForm.workday, true)">
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title" style="font-weight: bold">中债估值日期</span>：
+                        <input type="text" ng-model="rmForm.cnbdDate" ng-blur="getAsideContent()" def-laydate id="rmSubOrderCnbdDate">
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">清算速度</span>：
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-change="selDate(rmForm.workday)" ng-model="rmForm.clearSpeed" value="0" ng-checked="true" >
+                                T+0
+                            </label>
+                            <label>
+                                <input type="radio" ng-change="selDate(rmForm.workday)" ng-model="rmForm.clearSpeed" value="1">
+                                T+1
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title" style="font-weight: bold">证券万得代码</span>：
+                        <input type="text" ng-model="rmForm.iwindcode" placeholder={{iwindcodePlace}} class="red-placeholder" ng-blur="getAsideContent()"/>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title" style="font-weight: bold">证券名称</span>：
+                        <div mass-autocomplete>
+                            <input type="text" class="auto-complete-input" ng-model="rmForm.bondName.securityName" mass-autocomplete-item="autocomplete_options_bondName" ng-blur="getAsideContent()" />
+                        </div><!--
+                        <ui-select class="tm_select tm_ui_select"  ng-model="rmForm.bondName" ng-blur="getAsideContent()">
+                            <ui-select-match placeholder="请选择交易负责人">
+                                <span ng-bind="$select.selected.securityName"></span>
+                            </ui-select-match>
+                            <ui-select-choices refresh="getBondName($select.search)" refresh-delay="0" repeat="bondName in securityNames">
+                                <span ng-bind="bondName.securityName"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配交易负责人
+                            </ui-select-no-choice>
+                        </ui-select>-->
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">数量</span>：
+                        <input type="text" ng-model="rmForm.bondNumber" ng-change="getFullAmount()">
+                        张
+                    </div>
+                    <div class="tmTicket_label rm_extra_label rm_extra_label_first">
+                        <span class="label_title">价格模式</span>：
+                        <div class="tm_radio rm_radio">
+                            <label class="label_first label-radio">
+                                <input type="radio" ng-model="rmForm.realRate" value='1'>
+                                <span class="radio-text" title="实际收益率">收益率</span>
+
+                            </label>
+                            <label class="label-radio">
+                                <input type="radio" ng-model="rmForm.realRate" value='2'>
+                                <span class="radio-text" title="交易净价">净价</span>
+
+                            </label>
+                            <label class="label-radio">
+                                <input type="radio" ng-model="rmForm.realRate" value='3'>
+                                <span class="radio-text" title="交易全价">全价</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price rm_extra_label">
+                        <span class="label_title" style="font-weight: bold">收益率</span>：
+                        <input type="text" ng-model="rmForm.yieldRate" ng-disabled="rmForm.realRate==='2' || rmForm.realRate==='3'" ng-blur="getAsideContent()">
+                        %
+                    </div>
+                    <div class="tmTicket_label tmTicket_price rm_extra_label">
+                        <span class="label_title" style="font-weight: bold">交易净价</span>：
+                        <input type="text" ng-model="rmForm.transPrice" ng-disabled="rmForm.realRate==='3'" ng-change="getFullAmount()" ng-blur="getAsideContent('transPrice')">
+                        元
+                    </div>
+                    <div class="tmTicket_label tmTicket_price rm_extra_label">
+                        <span class="label_title" style="font-weight: bold">交易全价</span>：
+                        <input type="text" ng-disabled="rmForm.realRate==='1' || rmForm.realRate==='2'" ng-model="rmForm.fullPrice" ng-blur="getAsideContent('fullPrice')">
+                        元
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易市场</span>：
+                        <ui-select class="tm_select tm_ui_select" search-enabled="false" ng-init="params.localMarkets[0]" ng-model="sel.market" ng-change="changeFixNum(sel.market.id)">
+                            <ui-select-match placeholder="请选择交易市场">
+                                <span ng-bind="$select.selected.label"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="market in (params.localMarkets | filter: {label: $select.search}) track by $index">
+                                <span ng-bind="market.label"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配市场
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">债券类型</span>：
+                        <select class="tm_select rm_sub_sel" ng-options="bondType.id as bondType.label for bondType in bondTypes" ng-model="rmForm.bondType" ng-change="changeBondType(rmForm.bondType)">
+                        </select>
+                        <select style="margin-left: 10px" class="tm_select rm_sub_sel" ng-options="securityType.id as securityType.label for securityType in bondType.list" ng-model="rmForm.securityType">
+                        </select>
+                    </div>
+                    <div class="tmTicket_label"></div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">卖出产品</span>：
+                        <ui-select ng-disabled="rmForm.buyBizId || rmForm.sellBizId" class="tm_select tm_ui_select" ng-model="sel.sellFundName" ng-change="getBlack(1) ">
+                            <ui-select-match placeholder="请选择产品名称">
+                                <span ng-bind="$select.selected.fundName"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="fundName in (localFund | filter: {fundName: $select.search})">
+                                <span ng-bind="fundName.fundName"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配产品
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">反手黑名单</span>：
+                        <select class="tm_select" readonly ng-options="sellBlack.id as sellBlack.title for sellBlack in sellBlacks" ng-model="sellBlack">
+                            <option value="">--反手黑名单--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label" style="position: relative">
+                        <div style="display: flex">
+                            <span class="label_title">交易对手</span>：
+                            <div mass-autocomplete>
+                                <input ng-disabled="disTrader" type="text" class="auto-complete-input btn" ng-model="rmForm.tempTradeCounterparty" mass-autocomplete-item="autocomplete_options_trade_counterparty" ng-blur="cancelFuzzySearch('isFuzzySearchCounterTrade')" ng-change="getTradeCounterparty(2, rmForm.tempTradeCounterparty)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">买入产品</span>：
+                        <ui-select ng-disabled="rmForm.buyBizId || rmForm.sellBizId" class="tm_select tm_ui_select"  ng-model="sel.buyFundName" ng-change="getBlack(2)">
+                            <ui-select-match placeholder="请选择产品名称">
+                                <span ng-bind="$select.selected.fundName"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="fundName in (localFund | filter: {fundName: $select.search}) track by $index">
+                                <span ng-bind="fundName.fundName"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配产品
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">反手黑名单</span>：
+                        <select class="tm_select" readonly ng-options="buyBlack.id as buyBlack.title for buyBlack in buyBlacks" ng-model="buyBlack">
+                            <option value="">--反手黑名单--</option>
+                        </select>
+                    </div>
+                    <div class="tmTicket_label" style="position: relative">
+                    </div>
+                    <div class="tmTicket_label rm_extra_label rm_extra_label_first" style="position: relative">
+                        <div style="display: flex">
+                            <span class="label_title">过券机构</span>：
+                            <div mass-autocomplete>
+                                <input type="text" class="auto-complete-input" ng-model="rmForm.tempCounterparty" mass-autocomplete-item="autocomplete_options_counterparty" ng-blur="cancelFuzzySearch('isFuzzySearchCounter')" ng-change="getTradeCounterparty(1, rmForm.tempCounterparty)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price rm_extra_label">
+                        <span class="label_title">过券费用</span>：
+                        <input type="text" ng-model="rmForm.transferFee">
+                        厘
+                    </div>
+                    <div class="tmTicket_label rm_extra_label">
+                        <span class="label_title">付费机构</span>：
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-model="rmForm.payOrganization" value="buy" ng-checked="true" >
+                                买方
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="rmForm.payOrganization" value="sell">
+                                卖方
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tmTicket_label rm_extra_label">
+                        <span class="label_title">过券负责人</span>：
+                        <ui-select class="tm_select tm_ui_select"  ng-model="sel.transferUser">
+                            <ui-select-match placeholder="过券负责人">
+                                <span ng-bind="$select.selected.userName"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="traderName in traderNames | filter: $select.search">
+                                <span ng-bind="traderName.userName"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配过券负责人
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易类型</span>：
+                        <select class="tm_select" ng-options="tradeType.id as tradeType.label for tradeType in tradeTypes" ng-model="rmForm.tradeType">
+                        </select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">交易负责人</span>：
+                        <ui-select ng-disabled="disTrader" class="tm_select tm_ui_select"  ng-model="sel.tradeUser">
+                            <ui-select-match placeholder="请选择交易负责人">
+                                <span ng-bind="$select.selected.userName"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="traderName in traderNames | filter: $select.search">
+                                <span ng-bind="traderName.userName"></span>
+                            </ui-select-choices>
+                            <ui-select-no-choice>
+                                没有匹配交易负责人
+                            </ui-select-no-choice>
+                        </ui-select>
+                    </div>
+                    <div class="tmTicket_label">
+                        <span class="label_title">协议号</span>：
+                        <input type="text" ng-model="rmForm.protocolNumber">
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">面额</span>：
+                        <input type="text" ng-model="rmForm.denomination">
+                        万元
+                    </div>
+                    <div class="tmTicket_label tmTicket_price">
+                        <span class="label_title">结算金额</span>：
+                        <input disabled type="text" ng-value="rmForm.amount | number: fixNum">
+                        元
+                    </div><!--
+                    <div class="tmTicket_label">
+                        <span class="label_title">是否全价</span>：
+                        <div class="tm_radio">
+                            <label class="label_first">
+                                <input type="radio" ng-model="rmForm.isFullPrice" value="0" >
+                                是
+                            </label>
+                            <label>
+                                <input type="radio" ng-model="rmForm.isFullPrice" value="1" ng-checked="true">
+                                否
+                            </label>
+                        </div>
+                    </div>-->
+                    <div class="tmTicket_note">
+                        <span class="label_title">备注</span>：
+                        <textarea class="rm_sub_desc" ng-model="rmForm.desc"></textarea>
+                    </div>
+                    <div class="tmTicket_addNew_handle rm-addNew-handle clearfix">
+                        <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                        <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+                    </div>
+                </div>
+                <div class="tmTicket_addNew_aside rm-addNew-aside">
+                    <div class="aside-head">
+                        <p><span class="head-title">估价日期</span>：<span class="aside-value" ng-bind="asideData.workday | date: 'yyyy-MM-dd'"></span></p>
+                        <p><span class="head-title">收益率</span>：<span class="aside-value" ng-bind="asideData.yield_cnbdEx || 0"></span></p>
+                        <p><span class="head-title">发行总额</span>：<span class="aside-value" ng-bind="asideData.issue_amountact||0"></span></p>
+                        <p><span class="head-title">久期</span>：<span class="aside-value" ng-bind="asideData.modidura_cnbd||0"></span></p>
+                        <p><span class="head-title">票面利率</span>：<span class="aside-value" ng-bind="asideData.couponrate||0"></span></p>
+                        <p><span class="head-title">行权日期</span>：<span class="aside-value" ng-bind="(asideData.nxoptiondate | date: 'yyyy-MM-dd') || '--'"></span></p>
+                        <p><span class="head-title">应计利息</span>：<span class="aside-value" ng-bind="(asideData.calc_accrint||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">bps变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': ((asideData.yield_cnbdEx||0)-(rmForm.yieldRate||0))<0}" ng-bind="((asideData.yield_cnbdEx||0)-(rmForm.yieldRate||0)) | number: fixNum"></span></p>
+                        <p><span class="head-title">利润变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': (((+rmForm.transPrice||0)-(asideData.calc_price||0))*(rmForm.denomination||0)*100)<0}" ng-bind="(((+rmForm.transPrice||0)-(asideData.calc_price||0))*(rmForm.denomination||0)*100) | number: fixNum"></span></p>
+                        <p><span class="head-title">价格变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': ((asideData.calc_price||0)-(+rmForm.transPrice||0))<0}" ng-bind="((asideData.calc_price||0)-(+rmForm.transPrice||0)) | number: fixNum"></span></p>
+                        <p><span class="head-title">右侧净价</span>：<span class="aside-value" ng-bind="(asideData.calc_price||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">清算价格</span>：<span class="aside-value" ng-bind="((asideData.calc_accrint||0)+(+rmForm.transPrice||0))*(rmForm.denomination||0)/100 | number: fixNum"></span></p>
+                        <p><span class="head-title">全价</span>：<span class="aside-value" ng-bind="((asideData.calc_accrint||0)+(+rmForm.transPrice||0))| number: fixNum"></span></p>
+                        <p style="color: #0a6cd6"><span class="head-title">实际净价</span>：<span class="aside-value" ng-bind="(asideData.actual_calc_price||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">实际收益</span>：<span class="aside-value" ng-bind="(asideData.actualProfitRate||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">中债净价</span>：<span class="aside-value" ng-bind="(asideData.net_cnbd||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">净价差价</span>：<span class="aside-value" ng-bind="((asideData.net_cnbd||0)-(+asideData.actual_calc_price||0))| number: fixNum"></span></p>
+                    </div>
+                    <div class="aside-body">
+                        <p style="font-weight: bold"><span class="head-title">卖出产品</span>：<span class="aside-value" ng-bind="sellFundName||''"></span></p>
+                        <p><span class="head-title">可用数量</span>：<span class="aside-value" ng-bind="bond.available||0 | number"></span></p>
+                        <p><span class="head-title">持仓数量</span>：<span class="aside-value" ng-bind="bond.holding||0 | number"></span></p>
+                        <p><span class="head-title">卖后可用</span>：<span class="aside-value" ng-bind="((bond.available||0)-(rmForm.bondNumber||0)) | number"></span></p>
+                        <p><span class="head-title">卖后持仓</span>：<span class="aside-value" ng-class="{'tm_state_pass': (bond.holding||0)-(rmForm.bondNumber||0)<100000}" ng-bind="((bond.holding||0)-(rmForm.bondNumber||0)) | number"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="isEditShow">
+        <div class="tmTicket_showMore_wrap" drag style="width: 800px;margin-left: -400px">
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelEdit()">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix" style="width: 800px">
+                <table class="rm-detail showMoreTable">
+                    <tr>
+                        <td>证券名称：</td>
+                        <td colspan="3">{{taskForm.bondName.securityName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易市场：</td>
+                        <td>{{taskForm.marketName}}</td>
+                        <td>债券类型：</td>
+                        <td>{{taskForm.bondType}}>{{taskForm.securityType}}</td>
+                    </tr>
+                    <tr>
+                        <td>中债估值日期：</td>
+                        <td>{{taskForm.cnbdDate}}</td>
+                        <td>实际收益率：</td>
+                        <td>{{taskForm.yieldRate}}</td>
+                    </tr>
+                    <tr>
+                        <td>指令交易日期：</td>
+                        <td>{{taskForm.workday}}</td>
+                        <td>卖出产品：</td>
+                        <td>{{taskForm.sellFundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>卖出产品黑名单：</td>
+                        <td title={{taskForm.sellBlacks}}>{{taskForm.sellBlacks}}</td>
+                        <td>买入产品：</td>
+                        <td>{{taskForm.buyFundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>买入产品黑名单：</td>
+                        <td title={{taskForm.buyBlacks}}>{{taskForm.buyBlacks}}</td>
+                        <td>数量：</td>
+                        <td>{{taskForm.bondNumber | number:0}}</td>
+                    </tr>
+                    <tr>
+                        <td>过券费用比例：</td>
+                        <td>{{taskForm.transferFee/1 | number:effectiveNumber}}厘</td>
+                        <td>交易净价：</td>
+                        <td>{{taskForm.transPrice/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>交易全价：</td>
+                        <td title={{taskForm.fullPrice}}>{{taskForm.fullPrice | number:effectiveNumber}}元</td>
+                        <td>结算金额：</td>
+                        <td title={{taskForm.amount}}>{{taskForm.amount/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>面额：</td>
+                        <td title={{taskForm.denomination}}>{{taskForm.denomination/1 | number:effectiveNumber}}万元</td>
+                        <td>过券机构：</td>
+                        <td>{{taskForm.counterPartyName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易对手：</td>
+                        <td>{{taskForm.counterPartyTradeName}}</td>
+                        <td>协议号：</td>
+                        <td>{{taskForm.protocolNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易：</td>
+                        <td>{{taskForm.tradeTypeShow}}</td>
+                        <td>过券负责人：</td>
+                        <td>{{taskForm.transferUserName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易负责人：</td>
+                        <td>{{taskForm.tradeUserName}}</td>
+                        <td>是否全价：</td>
+                        <td>{{taskForm.isFullPriceName}}</td>
+                    </tr>
+                    <tr>
+                        <td>清算速度：</td>
+                        <td>{{taskForm.clearSpeed==='0'?'T+0':'T+1'}}</td>
+                        <td>付费机构：</td>
+                        <td>{{taskForm.payOrganizationShow}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{taskForm.desc}}</td>
+                    </tr>
+                </table>
+                <div class="rm-aside tmTicket_addNew_aside rm-addNew-aside">
+                    <div class="aside-head">
+                        <p><span class="head-title">估价日期</span>：<span class="aside-value" ng-bind="asideData.workday | date: 'yyyy-MM-dd'"></span></p>
+                        <p><span class="head-title">收益率</span>：<span class="aside-value" ng-bind="asideData.yield_cnbdEx || 0"></span></p>
+                        <p><span class="head-title">发行总额</span>：<span class="aside-value" ng-bind="asideData.issue_amountact||0"></span></p>
+                        <p><span class="head-title">久期</span>：<span class="aside-value" ng-bind="asideData.modidura_cnbd||0"></span></p>
+                        <p><span class="head-title">票面利率</span>：<span class="aside-value" ng-bind="asideData.couponrate||0"></span></p>
+                        <p><span class="head-title">行权日期</span>：<span class="aside-value" ng-bind="(asideData.nxoptiondate | date: 'yyyy-MM-dd') || '--'"></span></p>
+                        <p><span class="head-title">应计利息</span>：<span class="aside-value" ng-bind="(asideData.calc_accrint||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">bps变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': ((asideData.yield_cnbdEx||0)-(taskForm.yieldRate||0))<0}" ng-bind="((asideData.yield_cnbdEx||0)-(taskForm.yieldRate||0)) | number: fixNum"></span></p>
+                        <p><span class="head-title">利润变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': (((+taskForm.transPrice||0)-(asideData.calc_price||0))*(taskForm.denomination||0)*100)<0}" ng-bind="(((+taskForm.transPrice||0)-(asideData.calc_price||0))*(taskForm.denomination||0)*100) | number: fixNum"></span></p>
+                        <p><span class="head-title">价格变化</span>：<span class="aside-value" ng-class="{'tm_state_pass': ((asideData.calc_price||0)-(+taskForm.transPrice||0))<0}" ng-bind="((asideData.calc_price||0)-(+taskForm.transPrice||0)) | number: fixNum"></span></p>
+                        <p><span class="head-title">右侧净价</span>：<span class="aside-value" ng-bind="(asideData.calc_price||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">清算价格</span>：<span class="aside-value" ng-bind="((asideData.calc_accrint||0)+(+taskForm.transPrice||0))*(taskForm.denomination||0)/100 | number: fixNum"></span></p>
+                        <p><span class="head-title">全价</span>：<span class="aside-value" ng-bind="((asideData.calc_accrint||0)+(+taskForm.transPrice||0))| number: fixNum"></span></p>
+                        <p style="color: #0a6cd6"><span class="head-title">实际净价</span>：<span class="aside-value" ng-bind="(asideData.actual_calc_price||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">实际收益</span>：<span class="aside-value" ng-bind="(asideData.actualProfitRate||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">中债净价</span>：<span class="aside-value" ng-bind="(asideData.net_cnbd||0) | number: fixNum"></span></p>
+                        <p><span class="head-title">净价差价</span>：<span class="aside-value" ng-bind="((asideData.net_cnbd||0)-(+asideData.actual_calc_price||0))| number: fixNum"></span></p>
+                    </div>
+                    <div class="aside-body">
+                        <p style="font-weight: bold"><span class="head-title">卖出产品</span>：<span class="aside-value" ng-bind="sellFundName||''"></span></p>
+                        <p><span class="head-title">可用数量</span>：<span class="aside-value" ng-bind="bond.available||0 | number"></span></p>
+                        <p><span class="head-title">持仓数量</span>：<span class="aside-value" ng-bind="bond.holding||0 | number"></span></p>
+                        <p><span class="head-title">卖后可用</span>：<span class="aside-value" ng-bind="((bond.available||0)-(taskForm.bondNumber||0)) | number"></span></p>
+                        <p><span class="head-title">卖后持仓</span>：<span class="aside-value" ng-class="{'tm_state_pass': (bond.holding||0)-(taskForm.bondNumber||0)<100000}" ng-bind="((bond.holding||0)-(taskForm.bondNumber||0)) | number"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="err_wrap" ng-show="isShowTip">
+    <div class="err_inner" drag>
+        <div class="errTitle" drag-handle><h3>风控提示</h3><img ng-click="closeTip()" src="img/err.png"/></div>
+        <div class="errTip" style="height: inherit">
+            <h2 ng-bind="tipTitle"></h2>
+            <pre title="{{tipText}}" ng-bind="tipText" class="tip-text"></pre>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowMoreList">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>风控提示</span>
+            <span ng-click="cancelShowMore()">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <colgroup>
+                    <col width="15%" >
+                    <col width="15%" >
+                    <col width="70%" >
+                </colgroup>
+                <tr>
+                    <th>风控编号</th>
+                    <th>风控类型</th>
+                    <th>备注</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td ng-bind="item.ruleId"></td>
+                    <td ng-bind="item.ruleType==='compareVolume'?'数量控制':item.ruleType==='compareCost'?'成本控制':item.ruleType==='compareModidura'?'久期控制':item.ruleType==='compareLeveraging'?'杠杆率控制':'投资标的控制'"></td>
+                    <td ng-bind="item.desc"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

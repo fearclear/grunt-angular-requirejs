@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="tm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-btn btn" ng-click="showEdit('add')">新建</span>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易对手名称</span>
+            <input type="text" class="common-input form-control" ng-model-options="{ debounce: 300 }" ng-model="keyword" ng-change="getTradeCounterparty(keyword)" />
+        </div>
+    </div>
+    <div class="tm_main tm-counterparty-main">
+        <div ui-grid="gridOptions" class="grid" ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit">
+        <div class="tmTicket_addNew_wrap tmBuySell_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="tmFund.name" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_fundName">
+                    <span class="label_title">交易对手名称：</span>
+                    <input type="text" ng-model="tmFund.title" style="width: 520px"/>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">联系人：</span>
+                    <input type="text" ng-model="tmFund.contact"/>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">手机号码：</span>
+                    <input type="text" ng-model="tmFund.phone"/>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">QQ：</span>
+                    <input type="text" ng-model="tmFund.qq"/>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="tmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>

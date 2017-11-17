@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<style>
+    .ui-grid input{
+        height: 32px !important;
+    }
+</style>
+<div class="tm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label" >
+                时间
+            </span>
+            <input class="common-input form-control" ng-model="workday" type="text" init-today id="tmWorkday" ng-change="getManual()" def-laydate />
+        </div>
+    </div>
+    <div class="tm_main tm-trading-main">
+        <div class="tm_trading_title">
+            <span ng-bind="workday"></span>
+            <span>日终交易说明表</span>
+        </div>
+        <div ui-grid="gridOptions" class="grid" ui-grid-edit ui-grid-row-edit ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>

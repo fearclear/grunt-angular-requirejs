@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="common-search">
+    <div class="common-search-part">
+        <span class="common-label">债项名称</span>
+        <input class="common-input form-control" type="text" ng-model="cmSearch.bondName" ng-change="filSearchBond(cmSearch.bondName)" />
+    </div>
+</div>
+<div class="cmMain_content">
+    <table class="table">
+        <tr>
+            <th>序号</th>
+            <th>交易代码</th>
+            <th>债项简称</th>
+            <th>发行主体</th>
+            <th>主体行业</th>
+            <th>外部评级</th>
+            <th>操作</th>
+        </tr>
+        <tr ng-repeat="item in items">
+            <td ng-bind="$index+1"></td>
+            <td ng-bind="item.productCode"></td>
+            <td class="main_color pointer" ng-bind="item.productName" ng-click="goBondDetail(item)"></td>
+            <td class="main_color pointer" ng-bind="item.companyName" ng-click="goMainDetail(item)"></td>
+            <td ng-bind="item.industryThree"></td>
+            <td ng-bind="item.companyOutGrade"></td>
+            <td>
+                <span><a href="javascript:;" class="main_color" ng-click="cancelConcern(item)">取消关注</a></span>
+            </td>
+        </tr>
+    </table>
+</div>

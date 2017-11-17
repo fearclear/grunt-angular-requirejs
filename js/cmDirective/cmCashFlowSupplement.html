@@ -1,0 +1,234 @@
+<div class="cm_content_title">
+    通用类现金补充流量表
+    <!--<span class="cmSearch_export main_color pointer">[export]</span>-->
+</div>
+<div class="cm_content_header">
+    <span>类型：普通报表</span>
+    <span>年数：</span>
+    <label class="cm_report_type_label">
+        <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="3">
+        <b class="hideCheck">3Y</b>
+    </label><label class="cm_report_type_label">
+    <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="5">
+    <b class="hideCheck">5Y</b>
+</label><label class="cm_report_type_label">
+    <input type="radio" class="cm_report_type_checkbox" ng-model="cmReportYear" ng-value="10">
+    <b class="hideCheck">10Y</b>
+</label>
+    <span>单位：</span><select ng-model="filUnit" ng-options="filUnit.code as filUnit.name for filUnit in filUnits"></select>
+    <span>币种：人民币</span>
+    <span class="cm_report_type">
+        <span>交易类型</span>
+        <label class="cm_report_type_label">
+            <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.fullYear" ng-true-value="'001'">
+            <b class="hideCheck">年度报告</b>
+        </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.halfYear" ng-true-value="'002'">
+        <b class="hideCheck">半年度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.firstQuarter" ng-true-value="'003'">
+        <b class="hideCheck">一季度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.thirdQuarter" ng-true-value="'004'">
+        <b class="hideCheck">三季度报告</b>
+    </label><!--
+                --><label class="cm_report_type_label">
+        <input type="checkbox" class="cm_report_type_checkbox" ng-model="cmReportType.otherReport" ng-true-value="'005'">
+        <b class="hideCheck">其他报告</b>
+    </label>
+    </span>
+    <span class="cmSearch_handle clearfix">
+        <span class="pointer" ng-click="searchFin('getFinCashFlowadd')">查询</span>
+        <span class="pointer" ng-click="resetFin()">重置</span>
+    </span>
+</div>
+<div class="cm_content_detail">
+    <div class="cm_content_part">
+        <table class="cm_financial_table">
+            <tbody>
+            <tr>
+                <th ng-show="allData.cashFlowSupplement.length"></th>
+                <th ng-show="allData.cashFlowSupplement.length" ng-repeat="item in allData.cashFlowSupplement"><span>{{item.TITLE}}</span></th>
+            </tr>
+            <tr>
+                <td><span>上市前/上市后</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.ISLISTINGREPORT==0?'上市前/挂牌前':item.ISLISTINGREPORT==1?'A/B股上市后':item.ISLISTINGREPORT==2?'三板挂牌后':''}}</td>
+            </tr>
+            <tr>
+                <td><span>公司类型</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.companyType}}</td>
+            </tr>
+            <tr>
+                <td><span>报表类型</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DATAAJUSTTYPE==0?'衍生值':item.DATAAJUSTTYPE==1?'调整前':item.DATAAJUSTTYPE==2?'调整后':item.DATAAJUSTTYPE==3?'原始值':''}}</td>
+            </tr>
+            <tr>
+                <td class="bold"><span>补充资料</span></td>
+                <td class="bold" ng-repeat="item in allData.cashFlowSupplement"></td>
+            </tr>
+            <tr>
+                <td class="indent"><span>净利润(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NETPROFIT/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>少数股东损益(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.MINORITYINCOME/filUnit | number: 2}}</td>
+            </tr>            <tr>
+                <td class="indent"><span>资产减值准备(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.ASSETDEVALUE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>固定资产和投资性房地产折旧(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FIXANDESTATEDEPR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>其中：固定资产折旧、油气资产折耗、生产性生物资产折旧(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FIXEDASSETETCDEPR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资性房地产折旧(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.ESTATEINVESTDEPR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>无形资产摊销(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.INTANGIBLEASSETAMOR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>长期待摊费用摊销(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.LTDEFEREXPAMOR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>递延收益摊销(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEFERINCOMEAMOR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>待摊费用的减少(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEFEREXPREDUCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>预提费用的增加(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DRAWINGEXPADD/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>处置固定资产、无形资产和其他长期资产的损失(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DISPFILASSETLOSS/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>固定资产报废损失(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FIXEDASSETLOSS/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>公允价值变动损失(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FVALUELOSS/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>财务费用(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FINANCEEXP/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>投资损失(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.INVLOSS/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>递延所得税(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEFERTAX/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>其中：递延所得税资产减少(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEFERTAXASSETREDUCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>递延所得税负债增加(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEFERTAXLIABADD/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>预计负债的增加(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.ANTICIPATELIABADD/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>存货的减少(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.INVENTORYREDUCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营性应收项目的减少(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.OPERATERECREDUCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营性应付项目的增加(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.OPERATEPAYADD/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>其他(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.OTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动产生的现金流量净额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.OPERATEFLOWOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动产生的现金流量净额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.OPERATEFLOWBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>经营活动产生的现金流量净额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NETOPERATECASHFLOW/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>债务转为资本(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.DEBTTOCAPITAL/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>一年内到期的可转换公司债券(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.CBONEYEAR/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>融资租入固定资产(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.FINALEASEFIXEDASSET/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>不涉及现金收支的投资和筹资活动金额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NOREFERCASHOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金的期末余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.CASHEND/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>减：现金的期初余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.CASHBEGIN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>加：现金等价物的期末余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.EQUIEND/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>减：现金等价物的期初余额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.EQUIBEGIN/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金及现金等价物净增加额其他项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NICASHEQUIOTHER/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金及现金等价物净增加额平衡项目(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NICASHEQUIBALANCE/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td class="indent"><span>现金及现金等价物的净增加额(元)</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.NICASHEQUI/filUnit | number: 2}}</td>
+            </tr>
+            <tr>
+                <td><span>公告日期</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.LATESTNOTICEDATE| date: 'yyyy-MM-dd'}}</td>
+            </tr>
+            <tr>
+                <td><span>数据来源</span></td>
+                <td ng-repeat="item in allData.cashFlowSupplement">{{item.REPORTSOURCETYPE || item.DATASOURCE}}</td>
+            </tr>
+            </tbody>
+        </table >
+    </div>
+</div>

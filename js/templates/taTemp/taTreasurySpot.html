@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<style>
+    .ta-body{
+        position: absolute;
+        top: 280px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+</style>
+<div class="todo-wrap clearfix">
+    <uib-tabset active="active">
+        <uib-tab index="$index" ng-repeat="tab in tabs" heading="{{tab.value}}" ng-click="refreshTab(tab.key)">
+
+        </uib-tab>
+    </uib-tabset>
+</div>
+<div class="tab-content">
+    <div class="main" ng-show="tabNow === 0" >
+        <div class="ta-head">
+            <table class="sr_table">
+                <tr>
+                    <td colspan="4">
+                        <div  style="display: flex;justify-content: space-around">
+                            <div>
+                                <span>期初日期：{{headInfo.workday | date:'yyyy-MM-dd'}}</span>
+                            </div>
+                            <div>
+                                <span>投资现金总额：{{headInfo.totalCapital | number: filNum}}</span>
+                            </div>
+                            <div>
+                                <span>可用现金总额：{{headInfo.totalCapitalAvailable | number: filNum}}</span>
+                            </div>
+                            <div>
+                                <span>资金利用率：{{headInfo.totalCapitalRatio*100 | number: filNum}}%</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="25%">持仓总成本：</td>
+                    <td width="25%" ng-bind="headInfo.totalCost | number: filNum"></td>
+                    <td width="25%">总市值：</td>
+                    <td width="25%" ng-bind="headInfo.totalMarketValue | number: filNum"></td>
+                </tr>
+                <tr>
+                    <td>持仓盈亏：</td>
+                    <td><span ng-class="{'state_down': headInfo.totalFloatingProfit<0, 'state_up': headInfo.totalFloatingProfit>=0}" ng-bind="headInfo.totalFloatingProfit | number: filNum"></span></td>
+                    <td>当日平仓盈亏：</td>
+                    <td><span ng-class="{'state_down': headInfo.todaySellProfit<0, 'state_up': headInfo.todaySellProfit>=0}" ng-bind="headInfo.todaySellProfit | number: filNum"></span></td>
+                </tr>
+                <tr>
+                    <td>累计盈亏：</td>
+                    <td><span ng-class="{'state_down': headInfo.totalSellProfit<0, 'state_up': headInfo.totalSellProfit>=0}" ng-bind="headInfo.totalSellProfit | number: filNum"></span></td>
+                    <td>总盈亏：</td>
+                    <td><span ng-class="{'state_down': headInfo.totalProfit<0, 'state_up': headInfo.totalProfit>=0}" ng-bind="headInfo.totalProfit | number: filNum"></span></td>
+                </tr>
+                <tr>
+                    <td>资金成本：</td>
+                    <td><span ng-bind="headInfo.capitalCost | number: filNum"></span></td>
+                    <td>实际盈亏：</td>
+                    <td><span ng-class="{'state_down': headInfo.actualProfit<0, 'state_up': headInfo.actualProfit>=0}" ng-bind="headInfo.actualProfit | number: filNum"></span></td>
+                </tr>
+            </table>
+        </div>
+        <div class="ta-body">
+            <div ui-grid="gridOptions" class="grid" ui-grid-edit ui-grid-row-edit ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+        </div>
+    </div>
+    <div class="ta-setting" ng-show="tabNow === 1" >
+        <div ta-spot-summaries style="height: 100%;overflow: auto"></div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="sr_fundAsset_wrap">
+    <div class="common-search-float clearfix">
+        <div class="pull-left common-flex" style="width: 80%">
+            <div class="common-search-part">
+                <span class="common-label">主体名称</span>
+                <input class="common-input min-input form-control" type="text" ng-model="sr.mainName" />
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">一级行业</span>
+                <ui-select class="common-label common-ui-select min-select" search-enabled="true" ng-model="sr.claireEmIndustryOne" ng-change="chooseTwo()">
+                    <ui-select-match placeholder="一级行业" allow-clear="true">
+                        <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="claireEmIndustryOne.code as claireEmIndustryOne in claireSREmIndustryOnes | filter:$select.search">
+                        <span ng-bind="claireEmIndustryOne.name"></span>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        没有匹配结果
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">二级行业</span>
+                <ui-select class="common-label common-ui-select min-select" search-enabled="true" ng-model="sr.claireEmIndustryTwo">
+                    <ui-select-match placeholder="二级行业" allow-clear="true">
+                        <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="claireEmIndustryTwo.code as claireEmIndustryTwo in claireSREmIndustryTwos | filter:$select.search">
+                        <span ng-bind="claireEmIndustryTwo.name"></span>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        没有匹配结果
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">省份</span>
+                <ui-select class="common-label common-ui-select min-select" search-enabled="true" ng-model="sr.province">
+                    <ui-select-match placeholder="省份" allow-clear="true">
+                        <span ng-bind="$select.selected.name"></span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="province.code as province in provinces | filter:$select.search">
+                        <span ng-bind="province.name"></span>
+                    </ui-select-choices>
+                    <ui-select-no-choice>
+                        没有匹配结果
+                    </ui-select-no-choice>
+                </ui-select>
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">到期时间</span>
+                <input class="common-input min-input form-control" ng-model="sr.dueDate" type="text" id="srDueDate" def-laydate />
+            </div>
+            <div class="common-search-part">
+                <span class="common-label">估值时间</span>
+                <input class="common-input min-input form-control" ng-model="sr.valueDate" type="text" id="srValueDate" def-laydate />
+            </div>
+        </div>
+        <div class="pull-right">
+            <div class="common-search-part">
+                <span class="btn common-btn" ng-click="searchMain()"><i class="glyphicon glyphicon-search"></i>查询</span>
+                <span class="btn common-btn" ng-click="resetMain()">重置</span>
+            </div>
+        </div>
+    </div>
+    <div class="sr_fundAsset_content sr_fundAsset_content_pagination">
+        <div ui-grid="gridOptions" class="grid" ui-grid-pagination ui-grid-selection ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+</div>

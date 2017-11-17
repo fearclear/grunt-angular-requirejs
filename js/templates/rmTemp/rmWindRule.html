@@ -1,0 +1,298 @@
+<link rel="stylesheet" type="text/css" href="css/angular-dropdownMultiselect.css">
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/riskManagement.css">
+<div class="tm_wrap">
+    <div class="tm_addNew">
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="addCtrl(1)">数量控制</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="addCtrl(2)">成本控制</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="addCtrl(3)">久期控制</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="addCtrl(4)">杠杆率控制</a>
+        <a class="tmOwn_addNew" href="javascript:;" ng-click="addCtrl(5)">投资标的黑名单控制</a>
+    </div>
+    <div class="common-search">
+        <div class="common-search-part">
+            <span class="common-label">规则类型</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="rmFormS.ruleType">
+                <ui-select-match placeholder="规则类型" allow-clear="true">
+                    <span ng-bind="$select.selected.label"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="ruleType.id as ruleType in params.ruleType">
+                    <span ng-bind="ruleType.label"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">产品名称</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="rmFormS.fundId">
+                <ui-select-match placeholder="规则类型" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fundName.fundId as fundName in fundNames | filter: $select.search">
+                    <span ng-bind="fundName.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">规则状态</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="rmFormS.state">
+                <ui-select-match placeholder="规则类型" allow-clear="false">
+                    <span ng-bind="$select.selected.label"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="state.id as state in params.state | filter: $select.search">
+                    <span ng-bind="state.label"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配结果
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="btn common-btn" ng-click="search()"><i class="glyphicon glyphicon-search"></i>查询</span>
+        </div>
+    </div>
+    <div class="tm_main rm_main_wind">
+        <div ui-grid="gridOptions" class="grid" ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.compareVolume">
+        <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">产品编号：</span>
+                    <div ng-dropdown-multiselect options="params.fundIds" readonly="true" selected-model="model.fundIds" extra-settings="ctrl.fundIds" translation-texts="defaultText.fundIds"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <label class="label_first">
+                        <span class="label_title">启用风控：</span>
+                        <input type="checkbox" ng-readonly="isUpdate" ng-model="rmForm.state" value="state" ng-checked="rmForm.state">
+                    </label>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">比较方向：</span>
+                    <select class="tm_select" ng-readonly="isUpdate" ng-options="compareDirection.id as compareDirection.label for compareDirection in params.compareDirection" ng-model="rmForm.compareDirection">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">比例：</span>
+                    <input ng-readonly="isUpdate" type="text" ng-model="rmForm.compareThresholdShow">
+                    %
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">分子类型：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="dividend.id as dividend.label for dividend in params.dividend" ng-model="rmForm.dividend">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">分母类型：</span>
+                    <select ng-readonly="isUpdate" class="tm_select divisor" ng-options="divisor.id as divisor.label for divisor in params.divisorNumber" ng-model="rmForm.divisor">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">控制方式：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="compareType.id as compareType.label for compareType in params.compareType" ng-model="rmForm.dividend">
+                    </select>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">风控描述：</span>
+                    <textarea ng-readonly="isUpdate" ng-model="rmForm.desc">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.compareCost">
+        <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">产品编号：</span>
+                    <div ng-dropdown-multiselect options="params.fundIds" selected-model="model.fundIds" extra-settings="ctrl.fundIds" translation-texts="defaultText.fundIds"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <label class="label_first">
+                        <span class="label_title">启用风控：</span>
+                        <input ng-readonly="isUpdate" type="checkbox" ng-model="rmForm.state" value="state" ng-checked="rmForm.state">
+                    </label>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">比较方向：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="compareDirection.id as compareDirection.label for compareDirection in params.compareDirection" ng-model="rmForm.compareDirection">
+                    </select>
+                </div>
+                <div class="tmTicket_radio_group">
+                    <div class="tmTicket_label tmTicket_price rm_radio_child">
+                        <label class="label_first">
+                            <input ng-readonly="isUpdate" type="radio" ng-model="rmForm.compareThresholdType" value="1" ng-checked="true" name="compareThreshold">
+                            <span class="label_title" style="width: inherit">比例：</span>
+                            <input ng-readonly="isUpdate" type="text" ng-model="rmForm.compareThresholdShow">
+                            %
+                        </label>
+                    </div>
+                    <div class="tmTicket_label tmTicket_price rm_radio_child rm_radio_sec">
+                        <label class="label_first">
+                            <input ng-readonly="isUpdate" type="radio" ng-model="rmForm.compareThresholdType" value="2" name="compareThreshold">
+                            <span class="label_title" style="width: inherit">金额：</span>
+                            <input ng-readonly="isUpdate" type="text" ng-model="rmForm.compareThresholdNumber">
+                            万元
+                        </label>
+                    </div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">控制方式：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="compareType.id as compareType.label for compareType in params.compareType" ng-model="rmForm.dividend">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">分子类型：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="dividend.id as dividend.label for dividend in params.dividend" ng-model="rmForm.dividend">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">投资标的：</span>
+                    <div ng-dropdown-multiselect options="params.securityTypes" selected-model="model.securityTypes" group-by="group"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">分母类型：</span>
+                    <select ng-disabled="rmForm.compareThresholdType == '2'" ng-readonly="isUpdate" class="tm_select divisor" ng-options="divisor.id as divisor.label for divisor in params.divisor" ng-model="rmForm.divisor">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">投资标的评级：</span>
+                    <div ng-dropdown-multiselect options="params.ratings" selected-model="model.ratings"></div>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">风控描述：</span>
+                    <textarea ng-readonly="isUpdate" ng-model="rmForm.desc">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.compareModidura">
+        <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">产品编号：</span>
+                    <div ng-dropdown-multiselect options="params.fundIds" selected-model="model.fundIds" extra-settings="ctrl.fundIds" translation-texts="defaultText.fundIds"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <label class="label_first">
+                        <span class="label_title">启用风控：</span>
+                        <input ng-readonly="isUpdate" type="checkbox" ng-model="rmForm.state" value="state" ng-checked="rmForm.state">
+                    </label>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">比较方向：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="compareDirection.id as compareDirection.label for compareDirection in params.compareDirection" ng-model="rmForm.compareDirection">
+                    </select>
+                </div>
+                <div class="tmTicket_label tmTicket_price">
+                    <span class="label_title">产品久期：</span>
+                    <input ng-readonly="isUpdate" type="text" ng-model="rmForm.compareThreshold"  />
+                    年
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">风控描述：</span>
+                    <textarea ng-readonly="isUpdate" ng-model="rmForm.desc">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.compareLeveraging">
+        <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">产品名称：</span>
+                    <div ng-dropdown-multiselect options="params.fundIds" selected-model="model.fundIds" extra-settings="ctrl.fundIds" translation-texts="defaultText.fundIds"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <label class="label_first">
+                        <span class="label_title">启用风控：</span>
+                        <input ng-readonly="isUpdate" type="checkbox" ng-model="rmForm.state" value="state" ng-checked="rmForm.state">
+                    </label>
+                </div>
+                <div class="tmTicket_label" style="width: 80%">
+                    <span class="label_title">比较方向：</span>
+                    <select ng-readonly="isUpdate" class="tm_select" ng-options="compareDirection.id as compareDirection.label for compareDirection in params.compareDirection" ng-model="rmForm.compareDirection">
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">杠杆控制：</span>
+                    <label>
+                        <input ng-readonly="isUpdate" type="radio" name="compareThreshold" ng-model="rmForm.compareThresholdType" value="4" ng-checked="true" />
+                        <input ng-readonly="isUpdate" type="text" ng-model="rmForm.compareThresholdShow"/>
+                        %
+                    </label>
+                </div>
+                <div class="tmTicket_label">
+                    <label>
+                        <input ng-readonly="isUpdate" type="radio" name="compareThreshold"  ng-model="rmForm.compareThresholdType" value="3" />
+                        无限制
+                    </label>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">风控描述：</span>
+                    <textarea ng-readonly="isUpdate" ng-model="rmForm.desc">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit.notinBlack">
+        <div class="tmTicket_addNew_wrap rm_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="rmForm.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">产品名称：</span>
+                    <div ng-dropdown-multiselect options="params.fundIds" selected-model="model.fundIds" extra-settings="ctrl.fundIds" translation-texts="defaultText.fundIds"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">交易市场：</span>
+                    <div ng-dropdown-multiselect options="params.markets" selected-model="model.markets"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">产品：</span>
+                    <div ng-dropdown-multiselect options="params.securityTypesMore" selected-model="model.securityTypes" group-by="group"></div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">评级：</span>
+                    <div ng-dropdown-multiselect options="params.ratings" selected-model="model.ratings"></div>
+                </div>
+                <div class="tmTicket_note">
+                    <span class="label_title">风控描述：</span>
+                    <textarea ng-readonly="isUpdate" ng-model="rmForm.desc">
+                    </textarea>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="rmForm.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>

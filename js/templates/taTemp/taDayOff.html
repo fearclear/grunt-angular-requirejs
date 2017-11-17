@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<link rel="stylesheet" href="css/templates/statisticalReport.css">
+<link rel="stylesheet" href="css/templates/businessReminder.css">
+<style>
+    [class*='icon-']:before{
+        font-family: inherit;
+    }
+    .pool{
+        position: absolute;
+        top: 44px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+</style>
+<div class="todo-wrap clearfix">
+    <uib-tabset active="active">
+        <uib-tab index="$index" ng-repeat="tab in tabs" heading="{{tab.value}}" ng-click="refreshTab(tab.index)">
+
+        </uib-tab>
+    </uib-tabset>
+</div>
+<div class="tab-content">
+    <div class="main" ng-show="tabNow===0" >
+        <div class="common-search">
+            <div class="common-search-part">
+                <span class="common-label">选择清算日期：</span>
+                <input class="common-input form-control" type="text" def-laydate ng-model="workday" id="workday" placeholder="选择开始时间" init-today />
+            </div>
+        </div>
+        <div class="step-main">
+            <div class="step-wrap">
+                <div class="step-item">
+                    <div class="step-btn" ng-click="updateNbfValuedate()">
+                        第一步：获取行情
+                    </div>
+                    <div class="step-content">
+                        最新行情日：{{valueDate}}
+                    </div>
+                    <div class="step-info main_color pointer" ng-click="getQuote()">
+                        查看行情
+                    </div>
+                </div>
+                <div class="step-arrow">
+                    <img src="./img/goNext.png" alt="下一步">
+                </div>
+                <div class="step-item">
+                    <div class="step-btn" ng-click="showImportModal()">
+                        第二步：导入明细
+                    </div>
+                </div>
+                <div class="step-arrow">
+                    <img src="./img/goNext.png" alt="下一步">
+                </div>
+                <div class="step-item">
+                    <div class="step-btn" ng-click="showImportList()">
+                        第三步：开始清算
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="info" ng-show="tabNow===1">
+        <div ui-grid="gridOptions" class="grid" ui-grid-exporter ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-move-columns></div>
+    </div>
+    <div class="pool" ng-show="tabNow===2" >
+        <div ta-trade-target-pool style="height: 100%"></div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isShowImport">
+    <div class="tmTicket_addNew_wrap tmBuySell_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" drag-handle>导入文件</div>
+        <div class="tmTicket_addNew_main clearfix">
+            <div class="tmTicket_label">
+                <span class="label_title">账户名称：</span>
+                <select class="tm_select" ng-options="taForm.AccountId as taForm.AccountName for taForm in nbAccounts" ng-model="taForm.accountId">
+                    <option value="">选择一个账户名称</option>
+                </select>
+            </div>
+            <div class="tmTicket_label">
+                <span class="label_title">日期：</span>
+                <input type="text" ng-model="taForm.valueDate" id="taValueDate" def-laydate />
+            </div>
+            <div class="type file" style="float: left;margin: 10px 50px 0;">
+                <span class="filename" >点击我导入文件</span>
+                <input class="content-value tm_select" type="file" nv-file-select uploader="uploader" style="opacity: 0" />
+            </div>
+            <div class="well my-drop-zone" style="float: left;width: 85%;margin: 10px 50px 0" nv-file-drop uploader="uploader" ng-show="uploader.isHTML5">
+                拖拽到此区域上传
+                <div ng-repeat="item in uploader.queue" class="filename">
+                    <span><strong>{{ item.file.name }}</strong></span>
+                    <span ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</span>
+                    <span class="text-center">
+                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                    </span>
+                    <div ng-show="uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tmTicket_addNew_handle">
+            <div class="tm_confirm" ng-click="upload()">导入</div>
+            <div class="tm_cancel" ng-click="cancelEdit('isShowImport')">取消</div>
+        </div>
+    </div>
+</div>
+<div class="tmTicket_addNew" ng-show="isShowList">
+    <div class="tmTicket_addNew_wrap tmBuySell_addNew_wrap" drag>
+        <div class="tmTicket_addNew_title" drag-handle>清算列表</div>
+        <div class="tmTicket_addNew_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>账户名称</th>
+                    <th>最近清算日期</th>
+                    <th>最新交易日期</th>
+                    <th>选择</th>
+                </tr>
+                <tr ng-repeat="item in clearList">
+                    <td ng-bind="$index+1"></td>
+                    <td class="align_center" ng-bind="item.AccountName"></td>
+                    <td class="align_center" ng-bind="item.ValueDate | date: 'yyyy-MM-dd'"></td>
+                    <td class="align_center" ng-bind="item.TradeDate | date: 'yyyy-MM-dd'"></td>
+                    <td><input type="checkbox" ng-model="item.select" ng-change="changeClick(item)" /></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tmTicket_addNew_handle">
+            <div class="tm_cancel" ng-click="cancelEdit('isShowList')">关闭</div>
+            <div class="tm_confirm" ng-click="confirmSub()">开始清算</div>
+        </div>
+    </div>
+</div>
+<div class="br_showMore" ng-show="isShowQuote">
+    <div drag class="br_showMore_wrap">
+        <div class="br_showMore_title" drag-handle>
+            <span>查看详情</span>
+            <span ng-click="cancelEdit('isShowQuote')">关闭</span>
+        </div>
+        <div class="br_showMore_main clearfix">
+            <table class="table">
+                <tr>
+                    <th>序号</th>
+                    <th>万得代码</th>
+                    <th>收盘价</th>
+                    <th>结算价</th>
+                    <th>行情日</th>
+                    <th>刷新时间</th>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td ng-bind="$index+1"></td>
+                    <td class="align_center" ng-bind="item.iWindCode"></td>
+                    <td class="number_type" ng-bind="item.s_dq_close | number"></td>
+                    <td class="number_type" ng-bind="item.s_dq_settle | number"></td>
+                    <td class="align_center" ng-bind="item.ValueDate | date: 'yyyy-MM-dd'"></td>
+                    <td class="align_center" ng-bind="item.RefreshTime | date: 'yyyy-MM-dd HH:mm:ss'"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

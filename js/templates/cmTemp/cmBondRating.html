@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="css/templates/creditManagement.css">
+<div class="cmMain_search">
+    <div class="cmSearch_part">
+        <span>关键字</span>
+        <input type="text" style="height: 31px; width: 140px" ng-model="cmSearch.bondName" />
+    </div>
+    <div class="cmSearch_part">
+        <span>一级行业</span>
+        <select ng-options="claireEmIndustryOne.code as claireEmIndustryOne.name for claireEmIndustryOne in claireEmIndustryOnes" ng-model="cmSearch.claireEmIndustryOne" ng-change="chooseTwo()">
+            <option value="">选择一级行业</option>
+        </select>
+    </div>
+    <div class="cmSearch_part">
+        <span>二级行业</span>
+        <select ng-options="claireEmIndustryTwo.code as claireEmIndustryTwo.name for claireEmIndustryTwo in claireEmIndustryTwos" ng-model="cmSearch.claireEmIndustryTwo" ng-change="chooseThree()">
+            <option value="">选择二级行业</option>
+        </select>
+    </div>
+    <div class="cmSearch_part">
+        <span>三级行业</span>
+        <select ng-options="claireEmIndustryThree.code as claireEmIndustryThree.name for claireEmIndustryThree in claireEmIndustryThrees" ng-model="cmSearch.claireEmIndustryThree">
+            <option value="">选择三级行业</option>
+        </select>
+    </div>
+    <div class="cmSearch_handle clearfix">
+        <span class="search_btn pointer" ng-click="searchBond()"><i class="icon-search"></i>查询</span>
+        <span class="reset_btn pointer" ng-click="resetBond()">重置</span>
+    </div>
+</div>
+<div class="cmMain_content">
+    <table class="table">
+        <tr>
+            <th>序号</th>
+            <th>交易代码</th>
+            <th>债项名称</th>
+            <th>债项持仓量</th>
+            <th>到期日</th>
+            <th>外部债项评级</th>
+            <th>外部债项评级公司</th>
+            <th>主体编码</th>
+            <th>主体名称</th>
+            <th>主体行业</th>
+            <th>外部主体评级</th>
+            <th>外部主体评级公司</th>
+        </tr>
+        <tr ng-repeat="item in items">
+            <td ng-bind="$index+1"></td>
+            <td ng-bind="item.productCode"></td>
+            <td ng-bind="item.productName" class="pointer main_color" ng-click="goBondDetail(item)"></td>
+            <td>{{item.productNumber | number:0}}</td>
+            <td>{{item.dueDate.split(' ')[0]}}</td>
+            <td ng-bind="item.productOutGrade"></td>
+            <td ng-bind="item.productOutGradeName"></td>
+            <td ng-bind="item.companyCode"></td>
+            <td ng-bind="item.companyName"></td>
+            <td ng-bind="item.industryThree"></td>
+            <td ng-bind="item.companyOutGrade"></td>
+            <td ng-bind="item.companyOutGradeName"></td>
+        </tr>
+    </table>
+</div>

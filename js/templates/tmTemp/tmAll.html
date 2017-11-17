@@ -1,0 +1,382 @@
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="tm_wrap">
+    <div class="common-search">
+        <div class="common-search-part">
+            <div class="tmAll_business_type">
+                <span class="search_title">交易类型</span>
+                <label class="tmAll_business_type_label">
+                    <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.ticket" ng-true-value="1">
+                    <b class="hideCheck">现券下单</b>
+                </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buyBackZY" ng-true-value="2">
+                <b class="hideCheck">质押式回购</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buyBackMD" ng-true-value="3">
+                <b class="hideCheck">买断式回购</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.trading" ng-true-value="4">
+                <b class="hideCheck">一级交易</b>
+            </label><!--
+                --><label class="tmAll_business_type_label">
+                <input type="checkbox" class="tmAll_business_type_checkbox" ng-model="tmAllBusinessType.buySell" ng-true-value="5">
+                <b class="hideCheck">申购赎回</b>
+            </label>
+            </div>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">产品名称</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="tmFundS.fundName">
+                <ui-select-match placeholder="请选择产品名称" allow-clear="true">
+                    <span ng-bind="$select.selected.fundName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="fundName.fundId as fundName in fundNamesNormal | filter: $select.search">
+                    <span ng-bind="fundName.fundName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配产品名称
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">开始时间</span>
+            <input class="common-input form-control" ng-model="tmFundS.startTime" type="text" id="tmAllStart" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">结束时间</span>
+            <input class="common-input form-control" ng-model="tmFundS.endTime" type="text" id="tmAllEnd" def-laydate />
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易人员</span>
+            <ui-select class="common-label common-ui-select" search-enabled="true" ng-model="tmFundS.traderName">
+                <ui-select-match placeholder="请选择交易员" allow-clear="true">
+                    <span ng-bind="$select.selected.userName"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="traderName.userId as traderName in traderNames | filter: $select.search">
+                    <span ng-bind="traderName.userName"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易员
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易方向</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.direction">
+                <ui-select-match placeholder="请选择交易方向" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="direction.code as direction in directions">
+                    <span ng-bind="direction.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易方向
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">清算方式</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.liquidationSpeed">
+                <ui-select-match placeholder="请选择清算方式" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="liquidationSpeed.code as liquidationSpeed in liquidationSpeeds">
+                    <span ng-bind="liquidationSpeed.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配清算方式
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part">
+            <span class="common-label">交易状态</span>
+            <ui-select class="common-label common-ui-select" search-enabled="false" ng-model="tmFundS.businessState">
+                <ui-select-match placeholder="请选择交易方向" allow-clear="true">
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="businessState.code as businessState in businessStates">
+                    <span ng-bind="businessState.name"></span>
+                </ui-select-choices>
+                <ui-select-no-choice>
+                    没有匹配交易状态
+                </ui-select-no-choice>
+            </ui-select>
+        </div>
+        <div class="common-search-part common-btn-tm-sel">
+            <span class="common-btn btn" ng-click="search()"><i class="glyphicon glyphicon-search"></i>查询</span>
+            <span class="common-btn btn" ng-click="reset()">重置</span>
+        </div>
+    </div>
+    <div class="tm_main tm_allMain">
+        <table class="table">
+            <tr>
+                <th><input type="checkbox" ng-model="checkedAll" ng-change="isCheckedAll(checkedAll)"></th>
+                <th ng-click="order='$index';rev=!rev">序号</th>
+                <th ng-click="order='fundName';rev=!rev">产品名称</th>
+                <th ng-click="order='$index';rev=!rev">债券名称</th>
+                <th ng-click="order='businessDirection';rev=!rev">交易方向</th>
+                <th ng-click="order='amount';rev=!rev">净资金额(元)</th>
+                <th ng-click="order='transPrice';rev=!rev">返回金额(元)</th>
+                <th ng-click="order='counterpartyShortName';rev=!rev">交易对手</th>
+                <th ng-click="order='interestRate';rev=!rev">利率</th>
+                <th ng-click="order='startTime';rev=!rev">开始时间</th>
+                <th ng-click="order='createTime';rev=!rev">截止时间</th>
+                <th ng-click="order='state';rev=!rev">交易状态</th>
+                <th ng-click="order='state';rev=!rev">指令详情</th>
+                <th class="pointer main_color" style="font-weight: bold" ng-csv="getArray" filename="全部交易.csv">导出数据</th>
+            </tr>
+            <tr ng-repeat="item in items | orderBy:order:rev">
+                <td><input type="checkbox" ng-model="item.isChecked" ng-change="checkChecked(item)"></td>
+                <td ng-bind="$index+1" ng-click="showMore(item)" class="main_color pointer"></td>
+                <td class="main_color aline_left" ng-bind="item.fundName"></td>
+                <td class="main_color aline_left"><div class="tm_note" title="{{item.bondNameMoreListsStr}}">{{item.bondNameShow}}</div></td>
+                <td class="aline_left" ng-bind="item.businessDirection"></td>
+                <td class="main_color number_type">{{(item.businessTypeCode==3||item.businessTypeCode==2)?(item.amount/1 | number:effectiveNumber):''}}</td>
+                <td class="main_color number_type">{{(item.businessTypeCode==3||item.businessTypeCode==2)?(item.transPrice/1 | number:effectiveNumber):item.amount/1}}</td>
+                <td class="main_color aline_left">{{item.counterpartyShortName}}</td>
+                <td class="main_color number_type">{{item.interestRate/1 | number:effectiveNumber}}</td>
+                <td ng-bind="item.startTime"></td>
+                <td ng-bind="item.buyBackClosingDate"></td>
+                <td><span ng-bind="item.state" class="{{item.state=='待确认'?'tm_state_normal_show':item.state=='已撤销'?'tm_state_delete_show':'tm_state_pass_show'}}"></span></td>
+                <td><span ng-show="item.orderId" class="main_color pointer" ng-click="goOrder(item)">跳转</span></td>
+                <td class="handle">
+                    <span><a href="javascript:;" class="main_color" ng-click="showMore(item)">查看</a></span>
+                    <span ng-hide="item.businessTypeCode == 1" ng-show="item.businessTypeCode != 2 && item.businessTypeCode != 3"><a href="javascript:;" class="main_color" ng-class="{'tm_state_disabled' : item.state != '待确认'}" ng-click="deleteBusiness(item)">撤销</a></span>
+                    <span ng-show="item.businessTypeCode != 2 && item.businessTypeCode != 3"><a href="javascript:;" class="main_color" ng-class="{'tm_state_disabled' : item.state != '待确认'}" ng-click="passBusiness(item)">确认</a></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isTicket">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isTicket')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>债券名称：</td>
+                        <td>{{tempTicket.bondNameShow}}</td>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                    </tr>
+                    <tr>
+                        <td>过券机构：</td>
+                        <td>{{tempTicket.transferAgentName}}</td>
+                        <td>对手方：</td>
+                        <td>{{tempTicket.tradeCounterpartyName}}</td>
+                    </tr>
+                    <tr>
+                        <td>委托方向：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                        <td>过券费用比例：</td>
+                        <td>{{tempTicket.bondProportion | number:effectiveNumber}}%</td>
+                    </tr>
+                    <tr>
+                        <td>交易净价：</td>
+                        <td>{{tempTicket.transPrice/1 | number:effectiveNumber}}元</td>
+                        <td>交易全价：</td>
+                        <td>{{tempTicket.fullAmount/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>数量：</td>
+                        <td>{{tempTicket.bondNumber | number:effectiveNumber}}</td>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>面额：</td>
+                        <td>{{tempTicket.denomination/10000 | number:effectiveNumber}}万元</td>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                    </tr>
+                    <tr>
+                        <td>过券负责人：</td>
+                        <td>{{tempTicket.bondHeadName}}</td>
+                        <td>清算速度：</td>
+                        <td>{{tempTicket.liquidationSpeed}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易时间：</td>
+                        <td>{{tempTicket.createTime}}</td>
+                        <td>状态：</td>
+                        <td class="{{tempTicket.state=='待确认'?'tm_state_normal':item.state=='撤销'?'tm_state_delete':'tm_state_pass'}}">{{tempTicket.state}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isBuyBack">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isBuyBack')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易对手：</td>
+                        <td>{{tempTicket.counterpartyShortName}}</td>
+                        <td>交易对手联系人：</td>
+                        <td>{{tempTicket.counterpartyUserName}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>资金负责人：</td>
+                        <td>{{tempTicket.capitalUserName}}</td>
+                    </tr>
+                    <tr>
+                        <td>回购截止日期：</td>
+                        <td>{{tempTicket.buyBackClosingDate}}</td>
+                        <td>回购金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>回购天数：</td>
+                        <td>{{tempTicket.buyBackDay}}天</td>
+                        <td>开始时间：</td>
+                        <td>{{tempTicket.startTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>利率：</td>
+                        <td>{{tempTicket.interestRate | number:2}}%</td>
+                        <td>业务分类：</td>
+                        <td>{{tempTicket.serviceType}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                        <td>委托方向：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                    </tr>
+                    <tr>
+                        <td>清算速度：</td>
+                        <td>{{tempTicket.liquidationSpeed}}</td>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.transPrice | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>交易时间：</td>
+                        <td>{{tempTicket.createTime.split(' ')[0]}}</td>
+                        <td>下单人：</td>
+                        <td>{{tempTicket.operatorName}}</td>
+                    </tr>
+                    <tr ng-show="tempTicket.bondNameMoreLists.length">
+                        <td colspan="4" style="max-height: 200px; overflow: auto">
+                            <table class="tm_tableShowMore">
+                                <tr ng-repeat="bondNameMoreList in tempTicket.bondNameMoreLists">
+                                    <td>{{bondNameMoreList.securityId}}</td>
+                                    <td>{{bondNameMoreList.securityName}}</td>
+                                    <td>{{bondNameMoreList.volume}}</td>
+                                    <td>{{bondNameMoreList.proport}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isTrading">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isTrading')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>债券名称：</td>
+                        <td>{{tempTicket.bondName.securityName}}</td>
+                        <td>交易市场：</td>
+                        <td>{{tempTicket.market}}</td>
+                    </tr>
+                    <tr>
+                        <td>交易员：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>交易净价：</td>
+                        <td>{{tempTicket.transPrice/1 | number:effectiveNumber}}元</td>
+                    </tr>
+                    <tr>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}元</td>
+                        <td>是否全价：</td>
+                        <td>{{tempTicket.fullPrice}}</td>
+                    </tr>
+                    <tr>
+                        <td>缴费方式：</td>
+                        <td>{{tempTicket.payType}}</td>
+                        <td>面额：</td>
+                        <td>{{tempTicket.denomination/10000 | number:effectiveNumber}}万元</td>
+                    </tr>
+                    <tr>
+                        <td>数量：</td>
+                        <td>{{tempTicket.bondNumber | number:0}}</td>
+                        <td>上市时间：</td>
+                        <td>{{tempTicket.listingTime}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tmTicket_showMore" ng-show="showMoreList.isBuySell">
+        <div class="tmTicket_showMore_wrap" drag>
+            <div class="tmTicket_showMore_title" drag-handle>
+                <span>查看详情</span>
+                <span ng-click="cancelShowMore('isBuySell')">关闭</span>
+            </div>
+            <div class="tmTicket_showMore_main clearfix">
+                <table class="showMoreTable">
+                    <tr>
+                        <td>产品名称：</td>
+                        <td colspan="3">{{tempTicket.fundName}}</td>
+                    </tr>
+                    <tr>
+                        <td>登记人：</td>
+                        <td>{{tempTicket.traderName}}</td>
+                        <td>生效时间：</td>
+                        <td>{{tempTicket.entryIntoForceTime}}</td>
+                    </tr>
+                    <tr>
+                        <td>结算金额：</td>
+                        <td>{{tempTicket.amount/1 | number:effectiveNumber}}万元</td>
+                        <td>交易方式：</td>
+                        <td>{{tempTicket.businessDirection}}</td>
+                    </tr>
+                    <tr class="tm_showMore_note">
+                        <td>备注：</td>
+                        <td colspan="3">{{tempTicket.note}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

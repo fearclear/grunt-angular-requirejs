@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="css/templates/fundManagement.css">
+<link rel="stylesheet" href="css/templates/transactionManagement.css">
+<div class="fm_wrap">
+    <div class="fm_inner" style="top: 0">
+        <table class="table">
+            <tr>
+                <th>序号</th>
+                <th>产品代码</th>
+                <th>产品简称</th>
+                <th>估值表标题</th>
+                <th>归一时间</th>
+                <th>模板类型</th>
+                <th>是否汇总统计</th>
+                <th>汇总统计排序</th>
+                <th>操作</th>
+            </tr>
+            <tr ng-repeat="item in items">
+                <td ng-bind="$index+1"></td>
+                <td class="main_color" ng-bind="item.fundCode"></td>
+                <td class="main_color" ng-bind="item.displayName"></td>
+                <td>{{item.originName}}</td>
+                <td>{{item.backOneDate}}</td>
+                <td>{{item.templateClassify == '2'? '集合信托模板': '默认模板'}}</td>
+                <td>{{item.showinResult?'是':'否'}}</td>
+                <td>{{item.displayOrder}}</td>
+                <td class="handle">
+                    <span ng-click="showEdit('edit', item)"><a class="main_color" href="javascript:;">修改</a></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="tmTicket_addNew" ng-show="isEdit">
+        <div class="tmTicket_addNew_wrap fmConfig_addNew_wrap" drag>
+            <div class="tmTicket_addNew_title" ng-bind="fmFund.title" drag-handle></div>
+            <div class="tmTicket_addNew_main clearfix">
+                <div class="tmTicket_label">
+                    <span class="label_title">估值表标题：</span>
+                    <input type="text" ng-model="fmFund.originName">
+                </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">模板类型：</span>
+                    <select class="tm_select" ng-model="fmFund.templateClassify">
+                        <option value="">--请选择模板类型--</option>
+                        <option value="1">默认模板</option>
+                        <option value="2">集合信托模板</option>
+                    </select>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">是否汇总统计：</span>
+                    <div class="tm_radio">
+                        <input type="radio" id="showinResultOk" name="showinResult" ng-model="fmFund.showinResult" data-ng-value='true'>
+                        <label for="showinResultOk" class="label_first">是</label>
+                        <input type="radio" id="showinResultNo" name="showinResult" ng-model="fmFund.showinResult" data-ng-value='false'>
+                        <label for="showinResultNo">否</label>
+                    </div>
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">汇总统计排序：</span>
+                    <input type="text" ng-model="fmFund.displayOrder">
+                </div>
+                <div class="tmTicket_label">
+                    <span class="label_title">归一时间：</span>
+                    <input type="text" ng-model="fmFund.backOneDate" id="fmConfigDate" def-laydate>
+                </div>
+            </div>
+            <div class="tmTicket_addNew_handle">
+                <div class="tm_confirm" ng-click="subEdit()" ng-bind="fmFund.confirm">确认</div>
+                <div class="tm_cancel" ng-click="cancelEdit()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
