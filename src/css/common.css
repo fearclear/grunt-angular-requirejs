@@ -593,3 +593,6 @@ textarea {
   border-radius: 5px;
   cursor: pointer;
 }
+.ui-grid-row:last-child .ui-grid-cell {
+  border-bottom-width: 1px !important;
+}
