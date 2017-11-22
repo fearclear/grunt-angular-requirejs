@@ -22,7 +22,7 @@ define(['app', 'storage'], function (app, storage) {
           }
         })
         .state('positionInformation', {
-          url: '/positionInformation.html',
+          url: '/positionInformation',
           views: {
             '': {
               templateUrl: 'js/templates/positionInformation.html',

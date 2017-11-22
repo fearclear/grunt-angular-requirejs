@@ -1,0 +1,21 @@
+.pi-header table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.pi-header table td {
+  width: 12.5%;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+.pi-header table td:nth-child(odd) {
+  background: #99cdff;
+  color: #000;
+}
+.pi-body {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

@@ -101,6 +101,10 @@ body {
   color: #e33;
   text-decoration: none;
 }
+.color-green{
+  color: #30b52d;
+  text-decoration: none;
+}
 .color-gray{
   color: #808080;
 }
@@ -470,7 +474,12 @@ input, button, select, textarea{
   display: block;
   padding: 20px 60px;
   .modal-content{
-    height: 100%;
+    position: absolute;
+    height: 550px;
+    top: 50%;
+    margin-top: -275px;
+    left: 60px;
+    right: 60px;
     .modal-header{
       .modal-title{
         display: flex;
@@ -492,4 +501,72 @@ input, button, select, textarea{
   left: 0;
   right: 0;
   overflow: auto;
+}
+//查看更多
+.common-showMore{
+  z-index: 10000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(51, 51, 51, 0.35);
+}
+.common-showMore_wrap{
+  overflow: hidden;
+  width: 700px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -340px;
+  margin-top: -300px;
+  background: #fff;
+  .table th{
+    background: none;
+    height: 30px;
+  }
+}
+.common-showMore_title{
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(#fff, #eef2f7);
+  text-align: left;
+  line-height: 38px;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  color: #000;
+  font-size: 16px;
+  padding: 0 20px;
+}
+.common-showMore_title span:last-child{
+  cursor: pointer;
+  float: right;
+}
+.common-showMore_main{
+  max-height: 600px;
+  overflow-y: auto;
+  width: 700px;
+  margin: 0 auto;
+}
+//cancel showMore
+.common-showMoreTable{
+  width: 100%;
+  table-layout: fixed;
+  td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.common-cancel_showMore{
+  display: inline-block;
+  margin: 0 auto;
+  width: 60%;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  background: #04a4fa;
+  border-radius: 5px;
+  cursor: pointer;
 }

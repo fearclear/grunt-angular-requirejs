@@ -10,64 +10,67 @@ define(['app', 'storage'], function (app, storage) {
         rowHeight: '36',
         exporterOlderExcelCompatibility: true,
         exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
-        columnDefs: [{
-          width: 50,
-          headerCellClass: 'align_center',
-          enableColumnMenu: false,
-          field: 'index',
-          displayName: '序号',
-          cellClass: 'align_center',
-          type: 'number'
-        },
+        columnDefs: [
           {
-            width: 100,
+            width: 50,
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'operatorName',
-            displayName: '姓名',
-            cellClass: 'align_center'
+            field: 'index',
+            displayName: '序号',
+            cellClass: 'align_center',
+            type: 'number'
           },
           {
-            width: 100,
+            width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'businessType',
-            displayName: '流程类型',
+            field: 'valueDate',
+            displayName: '日期',
+            cellClass: 'align_center',
+            cellFilter: 'date: "yyyy-MM-dd"'
+          },
+          {
+            width: '**',
+            headerCellClass: 'align_center',
+            enableColumnMenu: false,
+            field: 'count',
+            displayName: '数量',
+            cellClass: 'number_type',
+            cellFilter: 'number'
+          },
+          {
+            width: '**',
+            headerCellClass: 'align_center',
+            enableColumnMenu: false,
+            field: 'directionType',
+            displayName: '方向',
             cellClass: 'align_center',
           },
           {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'applicationShow',
-            displayName: '流程时间',
-            cellClass: 'align_center'
-          },
-          {
-            width: 100,
-            headerCellClass: 'align_center',
-            enableColumnMenu: false,
-            field: 'stateShow',
-            displayName: '审批状态',
-            cellClass: 'align_center'
+            field: 'price',
+            displayName: '价格',
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'createTimeShow',
-            displayName: '发起时间',
-            cellClass: 'align_center',
-            cellFilter: 'date: yyyy-MM-dd'
+            field: 'poundage',
+            displayName: '手续费',
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
-            width: 100,
+            width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'handle',
-            displayName: '操作',
-            cellClass: 'main_color align_center',
-            cellTemplate: '<div class="ui-grid-cell-contents main_color pointer" ng-click="grid.appScope.showDetail(row.entity.tabIndex, row.entity)"><span><a href="javascript:;" class="main_color">{{row.entity.handleText}}</a></span></div>'
+            field: 'poundageType',
+            displayName: '手续费类型',
+            cellClass: 'align_center',
           },
         ],
         onRegisterApi: function (gridApi) {
@@ -82,5 +85,17 @@ define(['app', 'storage'], function (app, storage) {
         enableHorizontalScrollbar: 0, //grid水平滚动条是否显示, 0-不显示  1-显示
         // enableVerticalScrollbar: 0,
       };
+
+      getTrade()
+      function getTrade() {
+        serverService.getTrade()
+          .then(function (data) {
+            data.forEach(function (i, n) {
+              i.index = n+1;
+              i.directionType = i.direction === 1 ? '开仓' : '平仓'
+            })
+            $scope.gridOptions.data = data;
+          })
+      }
     }]);
 });

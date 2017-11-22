@@ -3,7 +3,7 @@
  */
 'use strict';
 
-define(['angular', 'storage'], function (angular, storage) {
+define(['angular', 'storage', 'echarts'], function (angular, storage, echarts) {
   return angular.module('TransactionRecord', ['ngSanitize', 'ngTouch', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.exporter', 'ui.grid.selection', 'angular-drag', 'ui.grid.moveColumns', 'ui.grid.pinning', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.treeView', 'ui.grid.edit', 'ui.grid.rowEdit', 'ui.grid.pagination', 'ui.select', 'ui.bootstrap'])
     .service('baseService', ['$rootScope', '$interval', 'serverService', '$timeout', '$location', '$state', 'i18nService',
       function ($rootScope, $interval, serverService, $timeout, $location, $state, i18nService) {
@@ -17,7 +17,7 @@ define(['angular', 'storage'], function (angular, storage) {
         var userInfo = $rootScope.userInfo = storage.local.getItem(storage.KEY.USERINFO) || {}
         var token = userInfo.userId
         if (token === 'null' || token === undefined || token === null || !token) {
-          $location.path('/login').replace();
+          logOut();
         }
         $rootScope.username = userInfo.userName
         //点击变换样式
@@ -34,7 +34,7 @@ define(['angular', 'storage'], function (angular, storage) {
           userInfo = storage.local.getItem(storage.KEY.USERINFO) || {}
           $rootScope.titleList = {
             '持仓信息': {
-              url: '#/positionInformation.html',
+              url: '#/positionInformation',
               visible: true,
               title: '持仓信息',
               list: []
@@ -69,7 +69,7 @@ define(['angular', 'storage'], function (angular, storage) {
           $rootScope.errConfirm = false;
           $rootScope.needHandle = false;
           if ($rootScope.errText === '用户未登录') {
-            $location.path('/login').replace();
+            logOut();
           }
           $rootScope.errText = '';
         };
@@ -96,17 +96,20 @@ define(['angular', 'storage'], function (angular, storage) {
           $rootScope.isError = true;
         }
         //退出登录
-        $rootScope.logOut = function () {
+        function logOut() {
           $rootScope.isBondContentDetail = false;
           $location.path('/login').replace();
           storage.session.clearAll();
           storage.local.removeItem(storage.KEY.USERINFO)
           serverService.changeToken('')
           checkTheme()
+        }
+        $rootScope.logOut = function () {
+          logOut();
         };
         var timer = $timeout(function () {
-          document.querySelector('#allWrap').style.display = 'block';
-          document.querySelector('#spinner').style.display = 'none';
+          $('#allWrap').show();
+          $('#spinner').hide();
         }, 50)
         $rootScope.$on('$destroy', function (ev) {
           $timeout.cancel(timer);
@@ -156,10 +159,242 @@ define(['angular', 'storage'], function (angular, storage) {
           $('.hide-model').show()
         }, 1000)
         //k线图
+        $rootScope.color = {
+          upColor: '#ec0000',
+          upBorderColor: '#8A0000',
+          downColor: '#00da3c',
+          downBorderColor: '#008F28',
+          break: '#dc4454',
+          breakUpDown: '#d970ad',
+          exit: '#f7bb44',
+          stopLoss: '#34bd9a',
+          closeout: '#4a8bdb',
+          openPosition: '#977adb',
+        }
         $rootScope.isShowModal = false;
         $rootScope.closeModal = function () {
           $rootScope.isShowModal = false;
         }
+        // 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
+        var dataList = splitData([]);
+        function splitData(rawData) {
+          var categoryData = [];
+          var values = []
+          for (var i = 0; i < rawData.length; i++) {
+            categoryData.push(new Date(rawData[i].workday).Format('yyyy/MM/dd'));
+            values.push([rawData[i].open, rawData[i].close, rawData[i].low, rawData[i].high])
+          }
+          return {
+            categoryData: categoryData,
+            values: values
+          };
+        }
 
+        function calculateMA(dayCount) {
+          var result = [];
+          for (var i = 0, len = dataList.values.length; i < len; i++) {
+            if (i < dayCount) {
+              result.push('-');
+              continue;
+            }
+            var sum = 0;
+            for (var j = 0; j < dayCount; j++) {
+              sum += dataList.values[i - j][1];
+            }
+            result.push(sum / dayCount);
+          }
+          return result;
+        }
+        var option = {
+          title: {
+            show: false
+          },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            }
+          },
+          legend: {
+            data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
+          },
+          grid: {
+            left: '10%',
+            right: '10%',
+            bottom: '15%',
+          },
+          xAxis: {
+            type: 'category',
+            data: [],
+            scale: true,
+            boundaryGap: false,
+            axisLine: {onZero: false},
+            splitLine: {show: false},
+            splitNumber: 20,
+            min: 'dataMin',
+            max: 'dataMax'
+          },
+          yAxis: {
+            scale: true,
+            splitArea: {
+              show: true
+            }
+          },
+          dataZoom: [
+            {
+              type: 'inside',
+              start: 0,
+              end: 100
+            },
+            {
+              show: true,
+              type: 'slider',
+              y: '90%',
+              start: 50,
+              end: 100
+            }
+          ],
+          series: [
+            {
+              name: '日K',
+              type: 'candlestick',
+            },
+            {
+              name: 'MA5',
+              type: 'line',
+            },
+            {
+              name: 'MA10',
+              type: 'line',
+            },
+            {
+              name: 'MA20',
+              type: 'line',
+            },
+            {
+              name: 'MA30',
+              type: 'line',
+            },
+          ]
+        };
+        var myChart
+        $rootScope.showKChart = function (item) {
+          $rootScope.isShowModal = true
+          $timeout(function () {
+            if(!myChart){
+              myChart = echarts.init($('#mainChart')[0])
+              myChart.setOption(option);
+            }
+            getQuotation(item)
+          }, 20)
+          function getQuotation(params) {
+            var pointList = []
+            params = params || {}
+            myChart.showLoading()
+            params.instrument_id = params.instrument_id || params.instrumentCode || ''
+            serverService.getSingnal(params)
+              .then(function (data) {
+                console.log(data)
+                var dataUri = '';
+                data.forEach(function (i) {
+                  switch (i.signal){
+
+                  }
+                  pointList.push({
+                    name: i.signal,
+                    // coord: [new Date(i.createTime).Format('yyyy/MM/dd'), i.positionPrice],
+                    coord: ['2013/11/29', 4200],
+                    value: i.signal,
+                    symbolSize: [147, 32],
+                    symbol: 'image://../../img/10daysexit'+i.type+i.direction+'.png',
+                  })
+                })
+              })
+              .then(function () {
+                serverService.getQuotation(params)
+                  .then(function (data) {
+                    myChart.hideLoading()
+                    dataList = splitData(data)
+                    option.xAxis.data = dataList.categoryData
+                    option.series = [
+                      {
+                        name: '日K',
+                        type: 'candlestick',
+                        data: dataList.values,
+                        itemStyle: {
+                          normal: {
+                            color: $rootScope.color.upColor,
+                            color0: $rootScope.color.downColor,
+                            borderColor: $rootScope.color.upBorderColor,
+                            borderColor0: $rootScope.color.downBorderColor
+                          }
+                        },
+                        markPoint: {
+                          label: {
+                            normal: {
+                              formatter: function (param) {
+                                return ''
+                              }
+                            }
+                          },
+                          data: pointList,
+                          tooltip: {
+                            show: true,
+                            formatter: function (param) {
+                              return param.name + '<br>' + (param.data.coord || '');
+                            }
+                          }
+                        }
+                      },
+                      {
+                        name: 'MA5',
+                        type: 'line',
+                        data: calculateMA(5),
+                        smooth: true,
+                        lineStyle: {
+                          normal: {opacity: 0.5}
+                        }
+                      },
+                      {
+                        name: 'MA10',
+                        type: 'line',
+                        data: calculateMA(10),
+                        smooth: true,
+                        lineStyle: {
+                          normal: {opacity: 0.5}
+                        }
+                      },
+                      {
+                        name: 'MA20',
+                        type: 'line',
+                        data: calculateMA(20),
+                        smooth: true,
+                        lineStyle: {
+                          normal: {opacity: 0.5}
+                        }
+                      },
+                      {
+                        name: 'MA30',
+                        type: 'line',
+                        data: calculateMA(30),
+                        smooth: true,
+                        lineStyle: {
+                          normal: {opacity: 0.5}
+                        }
+                      },
+
+                    ]
+                    myChart.setOption(option)
+                  })
+              })
+          }
+        }
+
+        //重置mychart大小
+        window.onresize = function () {
+          if(myChart){
+            myChart.resize()
+          }
+        }
       }])
 });

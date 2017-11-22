@@ -23,49 +23,54 @@ define(['app', 'storage'], function (app, storage) {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'operatorName',
+            field: 'instrumentCode',
             displayName: '合约号',
-            cellClass: 'align_center'
-          },
-          {
-            width: '**',
-            headerCellClass: 'align_center',
-            enableColumnMenu: false,
-            field: 'businessType',
-            displayName: '方向',
             cellClass: 'align_center',
+            cellTemplate: '<div class="ui-grid-cell-contents" ><span class="pointer main_color" ng-click="grid.appScope.showKChart(row.entity)">{{grid.getCellValue(row, col)}}</span></div>'
           },
           {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'applicationShow',
+            field: 'directionType',
+            displayName: '方向',
+            cellClass: changeColor,
+          },
+          {
+            width: '**',
+            headerCellClass: 'align_center',
+            enableColumnMenu: false,
+            field: 'count',
             displayName: '数量',
-            cellClass: 'align_center'
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'stateShow',
+            field: 'cost',
             displayName: '成本',
-            cellClass: 'align_center'
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
             width: '**',
             headerCellClass: 'align_center color-red',
             enableColumnMenu: false,
-            field: 'createTimeShow',
+            field: 'curPrice',
             displayName: '当前价格?',
-            cellClass: 'align_center',
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
             width: '**',
             headerCellClass: 'align_center',
             enableColumnMenu: false,
-            field: 'createTimeShow',
+            field: 'market',
             displayName: '市值',
-            cellClass: 'align_center',
+            cellClass: 'number_type',
+            cellFilter: 'number'
           },
           {
             width: 100,
@@ -73,8 +78,8 @@ define(['app', 'storage'], function (app, storage) {
             enableColumnMenu: false,
             field: 'handle',
             displayName: '操作',
-            cellClass: 'main_color align_center',
-            cellTemplate: '<div class="ui-grid-cell-contents main_color pointer" ng-click="grid.appScope.showDetail(row.entity.tabIndex, row.entity)"><span><a href="javascript:;" class="main_color">{{row.entity.handleText}}</a></span></div>'
+            cellClass: 'align_center',
+            cellTemplate: '<div class="ui-grid-cell-contents"><span class="main_color pointer" ng-click="grid.appScope.showDetail(row.entity)">查看</span></div>'
           },
         ],
         onRegisterApi: function (gridApi) {
@@ -90,14 +95,62 @@ define(['app', 'storage'], function (app, storage) {
         // enableVerticalScrollbar: 0,
       };
 
+      //多空标色
+      function changeColor(grid, row, col) {
+        if(row.entity.direction){
+          return 'align_center color-red'
+        }else {
+          return 'align_center color-green'
+        }
+      }
+
       //获取持仓信息
-      getPosition();
-      function getPosition(params) {
+      getHolding();
+      function getHolding(params) {
         params = params ? params : {};
-        serverService.getPosition(params)
+        showLoading()
+        serverService.getHolding(params)
           .then(function (data) {
             console.log(data)
+            if(data && data.length){
+              data.forEach(function (i, n) {
+                i.index = n+1;
+                i.directionType = i.direction === 0 ? '空' : i.direction === 1 ? '多' : ''
+              });
+              $scope.gridOptions.data = data;
+            }
           })
+      }
+
+      //获取本金
+      $scope.moneyType = {}
+      getMoney()
+      function getMoney() {
+        var workday = new Date().Format('yyyy-MM-dd');
+        showLoading()
+        serverService.getMoney({workday: workday})
+          .then(function (data) {
+            $scope.moneyType = data
+          })
+      }
+      
+      //查看详情
+      $scope.showDetail = function (item) {
+        item.instrument_id = item.instrumentCode;
+        serverService.getPosition(item)
+          .then(function (data) {
+            console.log(data);
+            data.forEach(function (i) {
+              i.directionType = i.direction === 0 ? '空' : '多';
+            });
+            $scope.isShowMoreList = true;
+            $scope.detailList = data;
+          })
+      }
+
+      $scope.cancelShowMore = function () {
+        $scope.isShowMoreList = false
+        $scope.detailList = []
       }
     }]);
 });

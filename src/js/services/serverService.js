@@ -75,6 +75,20 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
       })
       return defer.promise;
     }
+    //查询本金
+    function getMoney(params) {
+      var defer = $q.defer();
+      $http({
+        url: url + '/getMoney',
+        method: 'GET',
+        params: params,
+      }).success(function (result) {
+        defer.resolve(result);
+      }).error(function (error) {
+        defer.reject(error);
+      })
+      return defer.promise;
+    }
     //查询历史头寸
     function getPosition(params) {
       var defer = $q.defer();
@@ -124,6 +138,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
       login: login,//登录
       getQuotation: getQuotation,//k线图查询
       getHolding: getHolding,//查询持仓
+      getMoney: getMoney,//查询本金
       getPosition: getPosition,//查询历史头寸
       getTrade: getTrade,//查询历史交易
       getSingnal: getSingnal,//查询信号
