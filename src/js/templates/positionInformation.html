@@ -2,13 +2,15 @@
 <div class="pi-header">
     <table>
         <tr>
-            <td>本金</td>
+            <td class="bold">日期</td>
+            <td>{{(moneyType.valueDate | date: 'yyyy-MM-dd')||''}}</td>
+            <td class="bold">本金</td>
             <td>{{(moneyType.principal | number)||0}}元</td>
-            <td>已用</td>
+            <td class="bold">已用</td>
             <td>{{(moneyType.spent | number)||0}}元</td>
-            <td>可用</td>
+            <td class="bold">可用</td>
             <td>{{(moneyType.available | number)||0}}元</td>
-            <td>手续费</td>
+            <td class="bold">手续费</td>
             <td>{{(moneyType.poundage | number)||0}}元</td>
         </tr>
     </table>
@@ -30,19 +32,19 @@
                     <th>方向</th>
                     <th>数量</th>
                     <th class="color-red">建仓时间</th>
-                    <th>成本</th>
+                    <th>成交价格</th>
                     <th>止损价格</th>
                     <th>N值</th>
                 </tr>
                 <tr ng-repeat="item in detailList">
                     <td class="align_center" ng-bind="item.positionId"></td>
-                    <td class="align_center" ng-bind="item.instrumentCode"></td>
+                    <td class="align_center" ng-bind="item.instrumentId"></td>
                     <td class="align_center" ng-bind="item.directionType"></td>
-                    <td class="align_center" ng-bind="item.count"></td>
+                    <td class="align_center" ng-bind="item.volume"></td>
                     <td class="align_center" ng-bind="item.createTime | date:'yyyy-MM-dd'"></td>
-                    <td class="align_center" ng-bind="item.cost"></td>
-                    <td class="align_center" ng-bind="item.evenPrice"></td>
-                    <td class="align_center" ng-bind="item.warningType"></td>
+                    <td class="align_center" ng-bind="item.amount"></td>
+                    <td class="align_center" ng-bind="item.stoploss"></td>
+                    <td class="align_center" ng-bind="item.n20"></td>
                 </tr>
             </table>
         </div>

@@ -12,7 +12,7 @@ define(['app', 'storage'], function (app, storage) {
         exporterCsvLinkElement: angular.element(document.querySelectorAll(".custom-csv-link-location")),
         columnDefs: [{
           width: 50,
-          headerCellClass: 'align_center',
+          headerCellClass: 'align_center bold',
           enableColumnMenu: false,
           field: 'index',
           displayName: '序号',
@@ -21,16 +21,16 @@ define(['app', 'storage'], function (app, storage) {
         },
           {
             width: '**',
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
-            field: 'instrumentCode',
+            field: 'instrumentId',
             displayName: '合约号',
             cellClass: 'align_center',
             cellTemplate: '<div class="ui-grid-cell-contents" ><span class="pointer main_color" ng-click="grid.appScope.showKChart(row.entity)">{{grid.getCellValue(row, col)}}</span></div>'
           },
           {
             width: '**',
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
             field: 'directionType',
             displayName: '方向',
@@ -38,16 +38,16 @@ define(['app', 'storage'], function (app, storage) {
           },
           {
             width: '**',
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
-            field: 'count',
+            field: 'volume',
             displayName: '数量',
             cellClass: 'number_type',
             cellFilter: 'number'
           },
           {
             width: '**',
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
             field: 'cost',
             displayName: '成本',
@@ -58,23 +58,23 @@ define(['app', 'storage'], function (app, storage) {
             width: '**',
             headerCellClass: 'align_center color-red',
             enableColumnMenu: false,
-            field: 'curPrice',
+            field: 'lastPrice',
             displayName: '当前价格?',
             cellClass: 'number_type',
             cellFilter: 'number'
           },
           {
             width: '**',
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
-            field: 'market',
+            field: 'lastMarket',
             displayName: '市值',
             cellClass: 'number_type',
             cellFilter: 'number'
           },
           {
             width: 100,
-            headerCellClass: 'align_center',
+            headerCellClass: 'align_center bold',
             enableColumnMenu: false,
             field: 'handle',
             displayName: '操作',
@@ -136,7 +136,7 @@ define(['app', 'storage'], function (app, storage) {
       
       //查看详情
       $scope.showDetail = function (item) {
-        item.instrument_id = item.instrumentCode;
+        item.instrument_id = item.instrumentId;
         serverService.getPosition(item)
           .then(function (data) {
             console.log(data);

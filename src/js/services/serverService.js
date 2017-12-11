@@ -7,6 +7,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
   return app.factory('serverService', ['$http', '$q', function ($http, $q) {
     //基础url配置
     var url = storage.KEY.API.url;
+    var dataUrl = storage.KEY.API.dataUrl;
     /**************************更改token**********************************************/
       //获取token
     var token = ''
@@ -51,7 +52,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getQuotation(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getQuotation',
+        url: dataUrl + '/getQuotation',
         method: 'GET',
         params: params,
       }).success(function (result) {
@@ -65,7 +66,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getHolding(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getHolding',
+        url: dataUrl + '/getHolding',
         method: 'GET',
         params: params,
       }).success(function (result) {
@@ -79,7 +80,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getMoney(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getMoney',
+        url: dataUrl + '/getMoney',
         method: 'GET',
         params: params,
       }).success(function (result) {
@@ -93,7 +94,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getPosition(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getPosition',
+        url: dataUrl + '/getPosition',
         method: 'GET',
         params: params,
       }).success(function (result) {
@@ -107,7 +108,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getTrade(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getTrade',
+        url: dataUrl + '/getTrade',
         method: 'GET',
         params: params,
       }).success(function (result) {
@@ -121,7 +122,7 @@ define(['app', 'md5', 'storage'], function (app, md5, storage) {
     function getSingnal(params) {
       var defer = $q.defer();
       $http({
-        url: url + '/getSingnal',
+        url: dataUrl + '/getSingnal',
         method: 'GET',
         params: params,
       }).success(function (result) {

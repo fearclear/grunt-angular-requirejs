@@ -279,6 +279,7 @@ define(['angular', 'storage', 'echarts'], function (angular, storage, echarts) {
         };
         var myChart
         $rootScope.showKChart = function (item) {
+          item.instrument_id = item.instrumentId || ''
           $rootScope.isShowModal = true
           $timeout(function () {
             if(!myChart){
@@ -294,21 +295,47 @@ define(['angular', 'storage', 'echarts'], function (angular, storage, echarts) {
             params.instrument_id = params.instrument_id || params.instrumentCode || ''
             serverService.getSingnal(params)
               .then(function (data) {
-                console.log(data)
                 var dataUri = '';
                 data.forEach(function (i) {
-                  switch (i.signal){
-
+                  var signalTypeShow = '20daysbreak'
+                  switch (i.signalType){
+                    case 1:
+                      signalTypeShow = '20daysupbreak'
+                      break
+                    case 2:
+                      signalTypeShow = '20daysdownbreak'
+                      break
+                    case 3:
+                      signalTypeShow = 'halfupbreak'
+                      break
+                    case 4:
+                      signalTypeShow = 'halfdownbreak'
+                      break
+                    case 5:
+                      signalTypeShow = '10daysexit'
+                      break
+                    case 6:
+                      signalTypeShow = 'stoploss'
+                      break
+                    case 7:
+                      signalTypeShow = 'closeout'
+                      break
+                    case 8:
+                      signalTypeShow = '20daysbreak'
+                      break
+                    default:
+                      break
                   }
                   pointList.push({
                     name: i.signal,
-                    // coord: [new Date(i.createTime).Format('yyyy/MM/dd'), i.positionPrice],
-                    coord: ['2013/11/29', 4200],
+                    coord: [new Date(i.createTime).Format('yyyy/MM/dd'), i.positionPrice],
+                    // coord: ['2013/11/29', 4200],
                     value: i.signal,
                     symbolSize: [147, 32],
-                    symbol: 'image://../../img/10daysexit'+i.type+i.direction+'.png',
+                    symbol: 'image://./img/'+signalTypeShow+i.type+i.direction+'.png',
                   })
                 })
+                console.log(pointList)
               })
               .then(function () {
                 serverService.getQuotation(params)

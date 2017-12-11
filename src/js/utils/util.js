@@ -9,6 +9,7 @@ define(function () {
         KEY: {
             API: {
                 url: 'http://192.168.0.188:9333/basin',
+                dataUrl: 'http://192.168.0.188:9966/quantification',
                 // url: 'http://192.168.0.120:9333/basin',
                 // url: 'http://192.168.1.188:9333/basin',
             },
